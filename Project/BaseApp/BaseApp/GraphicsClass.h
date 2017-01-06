@@ -5,7 +5,11 @@
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
-#include <Windows.h>
+#include "D3DClass.h"
+#include "CameraClass.h"
+#include "ModelClass.h"
+#include "ShaderClass.h"
+
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -25,6 +29,10 @@ public:
 
 private:
 	bool Render();
+	D3DClass* m_Direct3D;
+	CameraClass* m_Camera;
+	ModelClass* m_Model;
+	ShaderClass* m_Shader;
 };
 
 
