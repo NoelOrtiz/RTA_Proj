@@ -61,6 +61,37 @@ void CameraClass::Render()
 	yaw = m_rotationY * 0.0174532925f;
 	roll = m_rotationZ * 0.0174532925f;
 
+	if (GetAsyncKeyState('W'))
+	{
+		m_positionZ += 0.5f;
+	}
+	if (GetAsyncKeyState('A'))
+	{
+		m_positionX -= 0.5f;
+	}
+	if (GetAsyncKeyState('S'))
+	{
+		m_positionZ -= 0.5f;
+	}
+	if (GetAsyncKeyState('D'))
+	{
+		m_positionX += 0.5f;
+	}
+	if (GetAsyncKeyState(VK_UP))
+	{
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, XMMatrixTranslation(0, 0.001f, 0));
+	}
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, XMMatrixTranslation(0, -0.001f, 0));
+	}
+
+	//XMVECTOR camPosition = m_viewMatrix.r[3];
+	//m_viewMatrix.r[3] = g_XMIdentityR3;
+	//
+	//m_viewMatrix.r[3] = camPosition;
+	//m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+
 	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
 	lookAt = XMVector3TransformCoord(lookAt, rotationMatrix);
@@ -68,6 +99,7 @@ void CameraClass::Render()
 	lookAt = position + lookAt;
 
 	m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+
 }
 
 void CameraClass::GetViewMatrix(XMMATRIX& view)
