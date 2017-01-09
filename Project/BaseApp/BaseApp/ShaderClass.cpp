@@ -125,6 +125,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	if (FAILED(result))
 		return false;
 	return true;
+
 }
 
 void ShaderClass::ShutdownShader()
@@ -193,6 +194,8 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX wor
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* dataPtr;
 	unsigned int bufferNumber;
+
+	
 
 	world = XMMatrixTranspose(world);
 	view = XMMatrixTranspose(view);

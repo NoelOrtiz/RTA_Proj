@@ -231,6 +231,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vSync, HWND hw
 	m_worldMatrix = XMMatrixIdentity();
 
 	// TODO: Camera/View matrix goes here.
+	
 
 	// For HUD elements
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
