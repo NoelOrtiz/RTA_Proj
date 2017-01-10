@@ -10,6 +10,7 @@ struct VertexInputType
 	float4 lpos : POSITION;
 	float4 lcol : COLOR;
 	float3 normalIn : NORMAL;
+	float3 instPos : TEXCOORD1;
 };
 
 struct PixelInputType
@@ -25,11 +26,15 @@ PixelInputType VShader(VertexInputType input)
 {
 	PixelInputType output;
 
+	input.lpos.x += input.instPos.x;
+	input.lpos.y += input.instPos.y;
+	input.lpos.z += input.instPos.z;
 	input.lpos.w = 1.0f;
 	output.hpos = mul(input.lpos, world);
 	float4 Worldpos = output.hpos;
 
 	//output world matrix to W_POS
+
 	output.hpos = mul(output.hpos, view);
 	output.hpos = mul(output.hpos, proj);
 	output.hcol = input.lcol;

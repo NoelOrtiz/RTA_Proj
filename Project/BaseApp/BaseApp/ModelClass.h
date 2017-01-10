@@ -17,12 +17,17 @@ private:
 		XMFLOAT3 normal;
 	};
 
+	struct InstanceType
+	{
+		XMFLOAT3 position;
+	};
+
 	bool InitializeBuffers(ID3D11Device*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	ID3D11Buffer* m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
+	ID3D11Buffer* m_vertexBuffer, *m_indexBuffer, *m_instanceBuffer;
+	int m_vertexCount, m_indexCount, m_instanceCount;
 	ID3D11Buffer *transparentBuffer;
 	D3D11_BUFFER_DESC transparentBufferdesc;
 
@@ -36,6 +41,7 @@ public:
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
+	int GetInstanceCount();
 
 	bool transparent;
 

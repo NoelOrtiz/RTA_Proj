@@ -7,6 +7,7 @@ ModelClass::ModelClass()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
+	m_instanceBuffer = 0;
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -39,22 +40,32 @@ int ModelClass::GetIndexCount()
 	return m_indexCount;
 }
 
+int ModelClass::GetInstanceCount()
+{
+	return m_instanceCount;
+}
+
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	VertexType* vertices;
+	InstanceType* instances;
 	unsigned int* indices;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc, instanceBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData, instanceData;
 	HRESULT result;
 
 	m_vertexCount = 4;
 	m_indexCount = 6;
+	m_instanceCount = 4;
 
 	vertices = new VertexType[m_vertexCount];
 	if (!vertices)
 		return false;
 	indices = new unsigned int[m_indexCount];
 	if (!indices)
+		return false;
+	instances = new InstanceType[m_instanceCount];
+	if (!instances)
 		return false;
 
 	vertices[0].position = XMFLOAT3(-10, 0, 10);
@@ -79,6 +90,11 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	indices[4] = 3;
 	indices[5] = 2;
 
+	instances[0].position = XMFLOAT3(-10, -10, 0);
+	instances[1].position = XMFLOAT3(0, 0, 1);
+	instances[2].position = XMFLOAT3(0, -5, 2);
+	instances[3].position = XMFLOAT3(0, -15, 3);
+	
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType)*m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -105,6 +121,10 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	if (FAILED(result))
+		return false;
+
 	transparentBufferdesc.Usage = D3D11_USAGE_IMMUTABLE;
 	transparentBufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	transparentBufferdesc.CPUAccessFlags = NULL;
@@ -112,19 +132,31 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	transparentBufferdesc.MiscFlags = 0;
 	transparentBufferdesc.StructureByteStride = 0;
 
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = device->CreateBuffer(&transparentBufferdesc, &indexData, &transparentBuffer);
 	if (FAILED(result))
 		return false;
 
-	result = device->CreateBuffer(&transparentBufferdesc, &indexData, &transparentBuffer);
+	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	instanceBufferDesc.ByteWidth = sizeof(InstanceType)*m_instanceCount;
+	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceBufferDesc.CPUAccessFlags = 0;
+	instanceBufferDesc.MiscFlags = 0;
+	instanceBufferDesc.StructureByteStride = 0;
+
+	instanceData.pSysMem = instances;
+	instanceData.SysMemPitch = 0;
+	instanceData.SysMemSlicePitch = 0;
+
+	result = device->CreateBuffer(&instanceBufferDesc, &instanceData, &m_instanceBuffer);
 	if (FAILED(result))
 		return false;
 
 	delete[] vertices;
 	delete[] indices;
-	indices = 0; vertices = 0;
+	delete[] instances;
+	indices = 0; vertices = 0; instances = 0;
 
-	return true;	
+	return true;
 }
 
 void ModelClass::ShutdownBuffers()
@@ -139,19 +171,33 @@ void ModelClass::ShutdownBuffers()
 		m_vertexBuffer->Release();
 		m_vertexBuffer = 0;
 	}
+	if (m_instanceBuffer)
+	{
+		m_instanceBuffer->Release();
+		m_instanceBuffer = 0;
+	}
 }
 
 
 void ModelClass::RenderBuffers(ID3D11DeviceContext* context)
 {
-	unsigned stride, offset;
+	unsigned stride[2];
+	unsigned offset[2];
+	ID3D11Buffer* bufferPointers[2];
 
-	stride = sizeof(VertexType);
-	offset = 0;
-	context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	stride[0] = sizeof(VertexType);
+	stride[1] = sizeof(InstanceType);
+	offset[0] = 0;
+	offset[1] = 0;
+
+	bufferPointers[0] = m_vertexBuffer;
+	bufferPointers[1] = m_instanceBuffer;
+
+	context->IASetVertexBuffers(0, 2, bufferPointers, stride, offset);
+
 	if (GetAsyncKeyState('T'))
 	{
-		float blend[4] = { 0.75f, 0.75f, 0.75f, 1.0f };
+		float blend[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 		context->IASetIndexBuffer(transparentBuffer, DXGI_FORMAT_R32_UINT, 0);
 		context->OMSetBlendState(d3d->transparency, blend, 0xffffffff);
