@@ -32,7 +32,7 @@ void ShaderClass::Shutdown()
 	ShutdownShader();
 }
 
-bool ShaderClass::Render(ID3D11DeviceContext* context, int indexCount, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
+bool ShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int instanceCount, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
 {
 	bool result;
 
@@ -40,7 +40,7 @@ bool ShaderClass::Render(ID3D11DeviceContext* context, int indexCount, XMMATRIX 
 	if (!result)
 		return false;
 
-	RenderShader(context, indexCount);
+	RenderShader(context, indexCount, instanceCount);
 
 	return true;
 }
@@ -51,7 +51,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[4];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 
@@ -110,6 +110,14 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[2].InstanceDataStepRate = 0;
+
+	polygonLayout[3].SemanticName = "TEXCOORD";
+	polygonLayout[3].SemanticIndex = 1;
+	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[3].InputSlot = 1;
+	polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	polygonLayout[3].InstanceDataStepRate = 1;
 
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
@@ -228,11 +236,11 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX wor
 	return true;
 }
 
-void ShaderClass::RenderShader(ID3D11DeviceContext* context, int indexCount)
+void ShaderClass::RenderShader(ID3D11DeviceContext* context, int indexCount, int instanceCount)
 {
 	context->IASetInputLayout(m_layout);
 	context->VSSetShader(m_vertexShader, NULL, 0);
 	context->PSSetShader(m_pixelShader, NULL, 0);
-	context->DrawIndexed(indexCount, 0, 0);
+	context->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
 
 }
