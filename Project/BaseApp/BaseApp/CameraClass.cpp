@@ -84,12 +84,12 @@ void CameraClass::Render()
 	if (GetAsyncKeyState(VK_SPACE))
 	{
 		XMMATRIX up = XMMatrixTranslation(0, -0.5f, 0);
-		m_viewMatrix = XMMatrixMultiply(up, m_viewMatrix);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, up);
 	}
 	if (GetAsyncKeyState(VK_LCONTROL))
 	{
 		XMMATRIX down = XMMatrixTranslation(0, 0.5f, 0);
-		m_viewMatrix = XMMatrixMultiply(down, m_viewMatrix);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, down);
 	}
 
 	//XMVECTOR camPosition = m_viewMatrix.r[3];

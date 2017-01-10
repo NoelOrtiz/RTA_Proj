@@ -42,7 +42,7 @@ int ModelClass::GetIndexCount()
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	VertexType* vertices;
-	unsigned long* indices;
+	unsigned int* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
@@ -53,7 +53,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	vertices = new VertexType[m_vertexCount];
 	if (!vertices)
 		return false;
-	indices = new unsigned long[m_indexCount];
+	indices = new unsigned int[m_indexCount];
 	if (!indices)
 		return false;
 
@@ -66,6 +66,11 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	vertices[1].color = XMFLOAT4(0, 1, 0, 1);
 	vertices[2].color = XMFLOAT4(0, 1, 1, 1);
 	vertices[3].color = XMFLOAT4(0, 0, 0, 1);
+
+	vertices[0].normal = XMFLOAT3(0, 1, 0);
+	vertices[1].normal = XMFLOAT3(0, 1, 0);
+	vertices[2].normal = XMFLOAT3(0, 1, 0);
+	vertices[3].normal = XMFLOAT3(0, 1, 0);
 
 	indices[0] = 0;
 	indices[1] = 1;
@@ -100,7 +105,18 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
+	transparentBufferdesc.Usage = D3D11_USAGE_IMMUTABLE;
+	transparentBufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	transparentBufferdesc.CPUAccessFlags = NULL;
+	transparentBufferdesc.ByteWidth = m_indexCount * sizeof(unsigned int);
+	transparentBufferdesc.MiscFlags = 0;
+	transparentBufferdesc.StructureByteStride = 0;
+
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	if (FAILED(result))
+		return false;
+
+	result = device->CreateBuffer(&transparentBufferdesc, &indexData, &transparentBuffer);
 	if (FAILED(result))
 		return false;
 
@@ -132,9 +148,23 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* context)
 
 	stride = sizeof(VertexType);
 	offset = 0;
-
+	HRESULT hr;
 	context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	if (GetAsyncKeyState('T'))
+	{
+		float blend[4] = { 0.75f, 0.75f, 0.75f, 1.0f };
+
+		context->IASetIndexBuffer(transparentBuffer, DXGI_FORMAT_R32_UINT, 0);
+		context->OMSetBlendState(d3d->transparency, blend, 0xffffffff);
+		transparent = true;
+	}
+	else
+	{
+		context->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		context->OMSetBlendState(0, 0, 0xffffffff);
+
+		transparent = false;
+	}
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 }

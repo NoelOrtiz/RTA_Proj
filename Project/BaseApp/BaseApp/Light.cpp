@@ -11,16 +11,19 @@ Light::~Light()
 {
 }
 
-bool Light::Initialize(ID3D11Device* device)
+bool Light::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	bool result;
-	result = InitializeBuffers(device);
+	result = InitializeBuffers(device, context);
 	if (!result)
 		return false;
+
+
+
 	return true;
 }
 
-bool Light::InitializeBuffers(ID3D11Device* device)
+bool Light::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	Lights light;
 
@@ -28,25 +31,33 @@ bool Light::InitializeBuffers(ID3D11Device* device)
 
 	D3D11_SUBRESOURCE_DATA lightData;
 
-	light.dirColor = { 1,1,1,1 };
+	light.dirColor = { .5f,.5f,.5f,.5f };
 	light.direction = { -1.0f, -0.75f, 0.0f };
 
-	light.pointPosition = { 0, 3, 0, 1 };
+	light.pointPosition = { 5, 3, 0, 1 };
 	light.pointColor = { 0.0f, 1.0f, 1.0f, 1.0f };
 	light.pointRadius = 10.0f;
 
 	light.spotColor = { 1.0f, 1.0f, 0.0f, 1.0f };
 	light.spotDirection = { 0, 0, 1, 1 };
-	light.spotPosition = { -5, 0, -10, 1 };
+	light.spotPosition = { -5, 3, -5, 1 };
 	light.spotRadius = 0.93f;
 
 	lightBufferdesc.Usage = D3D11_USAGE_DYNAMIC;
 	lightBufferdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	lightBufferdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	lightBufferdesc.ByteWidth = sizeof(Lights);
+	lightBufferdesc.MiscFlags = NULL;
+	lightBufferdesc.StructureByteStride = 0;
 
 	lightData.pSysMem = &light;
-	device->CreateBuffer(&lightBufferdesc, &lightData, &lightBuffer);
+	lightData.SysMemPitch = 0;
+	lightData.SysMemSlicePitch = 0;
+	
+	HRESULT hr;
+	hr = device->CreateBuffer(&lightBufferdesc, &lightData, &lightBuffer);
+
+	SetLightParameters(context, light);
 
 	return true;
 }
