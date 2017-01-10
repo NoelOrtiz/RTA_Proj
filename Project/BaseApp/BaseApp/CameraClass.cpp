@@ -141,3 +141,8 @@ void CameraClass::GetViewMatrix(XMMATRIX& view)
 {
 	view = m_viewMatrix;
 }
+
+XMMATRIX CameraClass::ViewM()
+{
+	return m_viewMatrix;
+}

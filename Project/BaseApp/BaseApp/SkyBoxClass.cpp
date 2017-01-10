@@ -66,14 +66,14 @@ bool SkyBoxClass::InitializeBuffers(ID3D11Device* device)
 	vertices[6].position = XMFLOAT3(-2, 4, -2);
 	vertices[7].position = XMFLOAT3(2, 4, -2);
 
-	vertices[0].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[1].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[2].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[3].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[4].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[5].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[6].color = XMFLOAT4(1, 1, 0, 1);
-	vertices[7].color = XMFLOAT4(1, 1, 0, 1);
+	vertices[0].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[1].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[2].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[3].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[4].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[5].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[6].color = XMFLOAT4(1, 0, 1, 1);
+	vertices[7].color = XMFLOAT4(1, 0, 1, 1);
 
 #pragma region Indicies
 	//Bottom

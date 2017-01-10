@@ -170,9 +170,12 @@ bool GraphicsClass::Render()
 		return false;
 
 	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
-	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), worldMatrix, viewMatrix, projMatrix);
+	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), XMMatrixTranslation(m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
 	if (!result)
 		return false;
+
+	m_Direct3D->GetDeviceContext()->RSSetState(nullptr);
+	m_Direct3D->GetDeviceContext()->OMSetDepthStencilState(nullptr, 0);
 
 	m_Direct3D->EndScene();
 	return true;
