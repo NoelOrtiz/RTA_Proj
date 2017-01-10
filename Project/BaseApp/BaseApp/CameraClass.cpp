@@ -63,27 +63,33 @@ void CameraClass::Render()
 
 	if (GetAsyncKeyState('W'))
 	{
-		m_positionZ += 0.5f;
+		XMMATRIX forward = XMMatrixTranslation(0, 0, -0.5f);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, forward);
 	}
 	if (GetAsyncKeyState('A'))
 	{
-		m_positionX -= 0.5f;
+		XMMATRIX left = XMMatrixTranslation(0.5f, 0, 0);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, left);
 	}
 	if (GetAsyncKeyState('S'))
 	{
-		m_positionZ -= 0.5f;
+		XMMATRIX backward = XMMatrixTranslation(0, 0, 0.5f);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, backward);
 	}
 	if (GetAsyncKeyState('D'))
 	{
-		m_positionX += 0.5f;
+		XMMATRIX right = XMMatrixTranslation(-0.5f, 0, 0);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, right);
 	}
-	if (GetAsyncKeyState(VK_UP))
+	if (GetAsyncKeyState(VK_SPACE))
 	{
-		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, XMMatrixTranslation(0, 0.001f, 0));
+		XMMATRIX up = XMMatrixTranslation(0, -0.5f, 0);
+		m_viewMatrix = XMMatrixMultiply(up, m_viewMatrix);
 	}
-	if (GetAsyncKeyState(VK_DOWN))
+	if (GetAsyncKeyState(VK_LCONTROL))
 	{
-		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, XMMatrixTranslation(0, -0.001f, 0));
+		XMMATRIX down = XMMatrixTranslation(0, 0.5f, 0);
+		m_viewMatrix = XMMatrixMultiply(down, m_viewMatrix);
 	}
 
 	//XMVECTOR camPosition = m_viewMatrix.r[3];
@@ -92,13 +98,47 @@ void CameraClass::Render()
 	//m_viewMatrix.r[3] = camPosition;
 	//m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
 
-	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	//rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	//
+	//lookAt = XMVector3TransformCoord(lookAt, rotationMatrix);
+	//up = XMVector3TransformCoord(up, rotationMatrix);
+	//lookAt = position + lookAt;
+	//
+	//m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
 
-	lookAt = XMVector3TransformCoord(lookAt, rotationMatrix);
-	up = XMVector3TransformCoord(up, rotationMatrix);
-	lookAt = position + lookAt;
+	m_viewMatrix = XMMatrixInverse(0, m_viewMatrix);
 
-	m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+
+	POINT newPos;
+	GetCursorPos(&newPos);
+	if (GetAsyncKeyState(VK_LBUTTON))
+	{
+		XMMATRIX Store = m_viewMatrix;
+
+		m_viewMatrix.r[3].m128_f32[0] = 0;
+		m_viewMatrix.r[3].m128_f32[1] = 0;
+		m_viewMatrix.r[3].m128_f32[2] = 0;
+
+
+		XMMATRIX XROT = -XMMatrixRotationX((newPos.y - point.y)  * 0.01f);
+		XMMATRIX YROT = -XMMatrixRotationY((newPos.x - point.x)  * 0.01f);
+
+
+
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, YROT);
+		m_viewMatrix = XMMatrixMultiply(XROT, m_viewMatrix);
+
+
+		m_viewMatrix.r[3].m128_f32[0] = Store.r[3].m128_f32[0];
+		m_viewMatrix.r[3].m128_f32[1] = Store.r[3].m128_f32[1];
+		m_viewMatrix.r[3].m128_f32[2] = Store.r[3].m128_f32[2];
+
+
+	}
+
+	m_viewMatrix = XMMatrixInverse(0, m_viewMatrix);
+
+	point = newPos;
 
 }
 
