@@ -64,6 +64,18 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize shader object", L"Shader Error", MB_OK);
 		return false;
 	}
+
+	m_Light = new Light;
+	if (!m_Light)
+		return false;
+
+	result = m_Light->Initialize(m_Direct3D->GetDevice());
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not Initialize light object", L"Light Error", MB_OK);
+		return false;
+	}
+
 	
 	return true;
 }

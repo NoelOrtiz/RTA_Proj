@@ -9,6 +9,7 @@
 #include "CameraClass.h"
 #include "ModelClass.h"
 #include "ShaderClass.h"
+#include "Light.h"
 
 
 const bool FULL_SCREEN = false;
@@ -33,6 +34,7 @@ private:
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
 	ShaderClass* m_Shader;
+	Light* m_Light;
 };
 
 
