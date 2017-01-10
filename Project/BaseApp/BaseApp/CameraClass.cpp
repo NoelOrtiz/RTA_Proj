@@ -5,19 +5,12 @@
 
 CameraClass::CameraClass()
 {
-	//XMVECTOR up, position, lookAt;
-	//float yaw, pitch, roll;
-	//XMMATRIX rotationMatrix;
-	//POINT newPosition;
 	m_positionX = 0.0f;
 	m_positionY = 0.0f;
 	m_positionZ = 0.0f;
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;	
-	oldPosition.x = 0;
-	oldPosition.y = 0;
-	rotationMatrix = XMMatrixIdentity();
 }
 
 CameraClass::CameraClass(const CameraClass& other)
@@ -48,13 +41,14 @@ XMFLOAT3 CameraClass::GetRotation()
 
 void CameraClass::Render()
 {
-
-	GetCursorPos(&newPosition);
+	XMVECTOR up, position, lookAt;
+	float yaw, pitch, roll;
+	XMMATRIX rotationMatrix;
 
 	up.m128_f32[0] = 0.0f;
 	up.m128_f32[1] = 1.0f;
 	up.m128_f32[2] = 0.0f;
-	
+
 	position.m128_f32[0] = m_positionX;
 	position.m128_f32[1] = m_positionY;
 	position.m128_f32[2] = m_positionZ;
@@ -63,78 +57,89 @@ void CameraClass::Render()
 	lookAt.m128_f32[1] = 0.0f;
 	lookAt.m128_f32[2] = 1.0f;
 
-	//pitch = m_rotationX * 0.0174532925f;
-	//yaw = m_rotationY * 0.0174532925f;
-	//roll = m_rotationZ * 0.0174532925f;
+	pitch = m_rotationX * 0.0174532925f;
+	yaw = m_rotationY * 0.0174532925f;
+	roll = m_rotationZ * 0.0174532925f;
 
 	if (GetAsyncKeyState('W'))
 	{
-		m_positionZ += 0.5f;
+		XMMATRIX forward = XMMatrixTranslation(0, 0, -0.5f);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, forward);
 	}
 	if (GetAsyncKeyState('A'))
 	{
-		m_positionX -= 0.5f;
+		XMMATRIX left = XMMatrixTranslation(0.5f, 0, 0);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, left);
 	}
 	if (GetAsyncKeyState('S'))
 	{
-		m_positionZ -= 0.5f;
+		XMMATRIX backward = XMMatrixTranslation(0, 0, 0.5f);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, backward);
 	}
 	if (GetAsyncKeyState('D'))
 	{
-		m_positionX += 0.5f;
+		XMMATRIX right = XMMatrixTranslation(-0.5f, 0, 0);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, right);
 	}
-	if (GetAsyncKeyState(VK_UP))
+	if (GetAsyncKeyState(VK_SPACE))
 	{
-		m_positionY += 0.5f;
+		XMMATRIX up = XMMatrixTranslation(0, -0.5f, 0);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, up);
 	}
-	if (GetAsyncKeyState(VK_DOWN))
+	if (GetAsyncKeyState(VK_LCONTROL))
 	{
-		m_positionY -= 0.5f;
+		XMMATRIX down = XMMatrixTranslation(0, 0.5f, 0);
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, down);
 	}
-	
+
+	//XMVECTOR camPosition = m_viewMatrix.r[3];
+	//m_viewMatrix.r[3] = g_XMIdentityR3;
+	//
+	//m_viewMatrix.r[3] = camPosition;
+	//m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+
+	//rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	//
+	//lookAt = XMVector3TransformCoord(lookAt, rotationMatrix);
+	//up = XMVector3TransformCoord(up, rotationMatrix);
+	//lookAt = position + lookAt;
+	//
+	//m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+
+	m_viewMatrix = XMMatrixInverse(0, m_viewMatrix);
+
+
+	POINT newPos;
+	GetCursorPos(&newPos);
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
-		//GetCursorPos(&newPosition);
-		//XMMATRIX tmp = m_viewMatrix;
-		//
-		//m_viewMatrix.r[3].m128_f32[0] = 0;
-		//m_viewMatrix.r[3].m128_f32[1] = 0;
-		//m_viewMatrix.r[3].m128_f32[2] = 0;
-		
-		pitch = ((newPosition.y - oldPosition.y)* 0.001f);
-		yaw = ((newPosition.x - oldPosition.x)* 0.001f);
-		
-		//XMMATRIX XROT = XMMatrixRotationX((newPosition.y - oldPosition.y)  * 0.01f);
-		//m_rotationX = (newPosition.y - oldPosition.y)  * 0.01f;
-		//XMMATRIX YROT = XMMatrixRotationY((newPosition.x - oldPosition.x)  * 0.01f);
-		//m_rotationY = (newPosition.x - oldPosition.x)  * 0.01f;
-		//
-		//
-		//m_viewMatrix = XMMatrixMultiply(m_viewMatrix, YROT);
-		//m_viewMatrix = XMMatrixMultiply(XROT, m_viewMatrix);
-		//
-		//m_viewMatrix.r[3].m128_f32[0] = tmp.r[3].m128_f32[0];
-		//m_viewMatrix.r[3].m128_f32[1] = tmp.r[3].m128_f32[1];
-		//m_viewMatrix.r[3].m128_f32[2] = tmp.r[3].m128_f32[2];
-		//
-		//rotationMatrix = XMMatrixMultiply(XROT, YROT);
-		//rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-		oldPosition = newPosition;
-		rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f);
+		XMMATRIX Store = m_viewMatrix;
+
+		m_viewMatrix.r[3].m128_f32[0] = 0;
+		m_viewMatrix.r[3].m128_f32[1] = 0;
+		m_viewMatrix.r[3].m128_f32[2] = 0;
+
+
+		XMMATRIX XROT = -XMMatrixRotationX((newPos.y - point.y)  * 0.01f);
+		XMMATRIX YROT = -XMMatrixRotationY((newPos.x - point.x)  * 0.01f);
+
+
+
+		m_viewMatrix = XMMatrixMultiply(m_viewMatrix, YROT);
+		m_viewMatrix = XMMatrixMultiply(XROT, m_viewMatrix);
+
+
+		m_viewMatrix.r[3].m128_f32[0] = Store.r[3].m128_f32[0];
+		m_viewMatrix.r[3].m128_f32[1] = Store.r[3].m128_f32[1];
+		m_viewMatrix.r[3].m128_f32[2] = Store.r[3].m128_f32[2];
+
 
 	}
 
-	
-	lookAt = XMVector3TransformCoord(lookAt, rotationMatrix);
-	lookAt = XMVector3Normalize(lookAt);
+	m_viewMatrix = XMMatrixInverse(0, m_viewMatrix);
 
-	up = XMVector3TransformCoord(up, rotationMatrix);
-	up = XMVector3Normalize(up);
+	point = newPos;
 
-	lookAt = position + lookAt;
-	
-	m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
-	GetViewMatrix(m_viewMatrix);
 }
 
 void CameraClass::GetViewMatrix(XMMATRIX& view)

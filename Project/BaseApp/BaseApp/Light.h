@@ -30,8 +30,8 @@ public:
 
 	ID3D11Buffer *lightBuffer;
 
-	bool Initialize(ID3D11Device*);
-	bool InitializeBuffers(ID3D11Device*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext* context);
+	bool InitializeBuffers(ID3D11Device*, ID3D11DeviceContext* context);
 	bool SetLightParameters(ID3D11DeviceContext*, Lights light);
 
 	void ShutdownBuffers();

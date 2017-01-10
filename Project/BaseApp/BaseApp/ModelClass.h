@@ -14,6 +14,7 @@ private:
 	{
 		XMFLOAT3 position;
 		XMFLOAT4 color;
+		XMFLOAT3 normal;
 	};
 
 	bool InitializeBuffers(ID3D11Device*);
@@ -22,6 +23,8 @@ private:
 
 	ID3D11Buffer* m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
+	ID3D11Buffer *transparentBuffer;
+	D3D11_BUFFER_DESC transparentBufferdesc;
 
 public:
 	ModelClass();
@@ -33,6 +36,10 @@ public:
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
+
+	bool transparent;
+
+	D3DClass* d3d;
 
 };
 

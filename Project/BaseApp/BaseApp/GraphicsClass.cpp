@@ -55,6 +55,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_Model->d3d = m_Direct3D;
 	m_SkyBox = new SkyBoxClass;
 	if (!m_SkyBox)
 		return false;
@@ -78,12 +79,13 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize shader object", L"Shader Error", MB_OK);
 		return false;
 	}
+	m_Shader->d3d = m_Direct3D;
 
 	m_Light = new Light;
 	if (!m_Light)
 		return false;
 
-	result = m_Light->Initialize(m_Direct3D->GetDevice());
+	result = m_Light->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not Initialize light object", L"Light Error", MB_OK);

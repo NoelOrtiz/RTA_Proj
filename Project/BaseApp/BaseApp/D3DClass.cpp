@@ -214,6 +214,34 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vSync, HWND hw
 
 	m_deviceContext->RSSetState(m_rasterState);
 
+	renderTargetblend.BlendEnable = true;
+	renderTargetblend.SrcBlend = D3D11_BLEND_SRC_COLOR;
+	renderTargetblend.DestBlend = D3D11_BLEND_BLEND_FACTOR;
+	renderTargetblend.BlendOp = D3D11_BLEND_OP_ADD;
+	renderTargetblend.SrcBlendAlpha = D3D11_BLEND_ONE;
+	renderTargetblend.DestBlendAlpha = D3D11_BLEND_ZERO;
+	renderTargetblend.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	renderTargetblend.RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
+
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = 0;
+	blendDesc.RenderTarget[0] = renderTargetblend;
+
+	//transparency = 0;
+	HRESULT hr;
+	hr = m_device->CreateBlendState(&blendDesc, &transparency);
+
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+
+	rasterDesc.FrontCounterClockwise = true;
+	m_device->CreateRasterizerState(&rasterDesc, &counterClockwise);
+
+	rasterDesc.FrontCounterClockwise = false;
+	m_device->CreateRasterizerState(&rasterDesc, &clockwise);
+
+
+
 	viewport.Width = (float)screenWidth;
 	viewport.Height = (float)screenHeight;
 	viewport.MinDepth = 0.0f;
@@ -353,4 +381,9 @@ void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
 	return;
+}
+
+D3DClass* D3DClass::GetD3DInstance()
+{
+	return this;
 }

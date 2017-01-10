@@ -9,6 +9,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <fstream>
+#include "D3DClass.h"
 using namespace DirectX;
 using namespace std;
 
@@ -40,6 +41,8 @@ public:
 	bool Initialize(ID3D11Device*, HWND);
 	void Shutdown();
 	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX);
+
+	D3DClass* d3d;
 };
 
 
