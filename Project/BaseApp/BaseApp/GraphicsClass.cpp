@@ -9,6 +9,7 @@ GraphicsClass::GraphicsClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
+	m_SkyBox = 0;
 	m_Shader = 0;
 }
 
@@ -54,6 +55,19 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_SkyBox = new SkyBoxClass;
+	if (!m_SkyBox)
+		return false;
+
+	result = m_SkyBox->Initialize(m_Direct3D->GetDevice());
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not Initialize skybox object", L"Model Error", MB_OK);
+		return false;
+	}
+
+
+
 	m_Shader = new ShaderClass;
 	if (!m_Shader)
 		return false;
@@ -96,6 +110,13 @@ void GraphicsClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}
+
+	if (m_SkyBox)
+	{
+		m_SkyBox->Shutdown();
+		delete m_SkyBox;
+		m_SkyBox = 0;
 	}
 
 	if (m_Camera)
@@ -145,6 +166,11 @@ bool GraphicsClass::Render()
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projMatrix);
+	if (!result)
+		return false;
+
+	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
+	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), worldMatrix, viewMatrix, projMatrix);
 	if (!result)
 		return false;
 
