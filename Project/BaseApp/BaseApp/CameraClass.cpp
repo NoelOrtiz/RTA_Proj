@@ -125,7 +125,6 @@ void CameraClass::Render()
 	}
 
 	
-	
 	lookAt = XMVector3TransformCoord(lookAt, rotationMatrix);
 	lookAt = XMVector3Normalize(lookAt);
 
@@ -135,6 +134,7 @@ void CameraClass::Render()
 	lookAt = position + lookAt;
 	
 	m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+	GetViewMatrix(m_viewMatrix);
 }
 
 void CameraClass::GetViewMatrix(XMMATRIX& view)
