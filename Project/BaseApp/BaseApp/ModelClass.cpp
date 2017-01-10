@@ -148,7 +148,6 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* context)
 
 	stride = sizeof(VertexType);
 	offset = 0;
-	HRESULT hr;
 	context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 	if (GetAsyncKeyState('T'))
 	{
