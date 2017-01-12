@@ -2,6 +2,7 @@
 // provided by rastertek.com (DX11 Series 2)
 
 #include "ModelClass.h"
+#include "DDSTextureLoader.h"
 
 ModelClass::ModelClass()
 {
@@ -16,10 +17,10 @@ ModelClass::ModelClass(const ModelClass& other)
 ModelClass::~ModelClass()
 {}
 
-bool ModelClass::Initialize(ID3D11Device* device)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	bool result;
-	result = InitializeBuffers(device);
+	result = InitializeBuffers(device, context);
 	if (!result)
 		return false;
 	return true;
@@ -45,13 +46,17 @@ int ModelClass::GetInstanceCount()
 	return m_instanceCount;
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device* device)
+bool ModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	VertexType* vertices;
 	InstanceType* instances;
 	unsigned int* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc, instanceBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData, instanceData;
+	ID3D11ShaderResourceView* m_shaderResourceView; // context->PSSetShaderResources(0,1,m_SRV);
+	ID3D11SamplerState* m_samplerState;
+	D3D11_SAMPLER_DESC ssDesc;
+
 	HRESULT result;
 
 	m_vertexCount = 4;
@@ -73,10 +78,10 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	vertices[2].position = XMFLOAT3(-10, 0, -10);
 	vertices[3].position = XMFLOAT3(10, 0, -10);
 
-	vertices[0].color = XMFLOAT4(1, 0, 0, 1);
-	vertices[1].color = XMFLOAT4(0, 1, 0, 1);
-	vertices[2].color = XMFLOAT4(0, 1, 1, 1);
-	vertices[3].color = XMFLOAT4(0, 0, 0, 1);
+	vertices[0].color = XMFLOAT4(0, 0, 0, 0);
+	vertices[1].color = XMFLOAT4(1, 0, 0, 0);
+	vertices[2].color = XMFLOAT4(0, 1, 0, 0);
+	vertices[3].color = XMFLOAT4(1, 1, 0, 0);
 
 	vertices[0].normal = XMFLOAT3(0, 1, 0);
 	vertices[1].normal = XMFLOAT3(0, 1, 0);
@@ -90,10 +95,10 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	indices[4] = 3;
 	indices[5] = 2;
 
-	instances[0].position = XMFLOAT3(-10, -10, 0);
-	instances[1].position = XMFLOAT3(0, 0, 1);
-	instances[2].position = XMFLOAT3(0, -5, 2);
-	instances[3].position = XMFLOAT3(0, -15, 3);
+	instances[0].position = XMFLOAT3(0, -10, 20);
+	instances[1].position = XMFLOAT3(0, 0, 0);
+	instances[2].position = XMFLOAT3(0, -5, 10);
+	instances[3].position = XMFLOAT3(0, -15, 30);
 	
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType)*m_vertexCount;
@@ -146,10 +151,29 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	instanceData.pSysMem = instances;
 	instanceData.SysMemPitch = 0;
 	instanceData.SysMemSlicePitch = 0;
-
+	
 	result = device->CreateBuffer(&instanceBufferDesc, &instanceData, &m_instanceBuffer);
 	if (FAILED(result))
 		return false;
+
+
+	result = CreateDDSTextureFromFile(device, L"Assets\\texture.dds", nullptr, &m_shaderResourceView, 0);
+	if (FAILED(result))
+		return false;
+	context->PSSetShaderResources(0, 1, &m_shaderResourceView);
+
+	ZeroMemory(&ssDesc, sizeof(&ssDesc));
+	ssDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	ssDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	ssDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	ssDesc.MipLODBias = 0;
+	ssDesc.MaxAnisotropy = 1;
+	ssDesc.ComparisonFunc = D3D11_COMPARISON_EQUAL;
+	ssDesc.MinLOD = -(FLT_MAX);
+	ssDesc.MaxLOD = (FLT_MAX);
+
+	device->CreateSamplerState(&ssDesc, &m_samplerState);
+	context->PSSetSamplers(0, 1, &m_samplerState);
 
 	delete[] vertices;
 	delete[] indices;

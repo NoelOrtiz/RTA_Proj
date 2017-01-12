@@ -31,7 +31,7 @@ bool Light::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context
 
 	D3D11_SUBRESOURCE_DATA lightData;
 
-	light.dirColor = { .5f,.5f,.5f,.5f };
+	light.dirColor = { .3f,.1f,.5f, 1.0f };
 	light.direction = { -1.0f, -0.75f, 0.0f };
 
 	light.pointPosition = { 5, 3, 0, 1 };
