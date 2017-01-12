@@ -160,8 +160,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	{
 		screenWidth = 800;
 		screenHeight = 600;
-		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)*0.5;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight)*0.5;
+		posX = (int)((GetSystemMetrics(SM_CXSCREEN) - screenWidth)*0.5);
+		posY = (int)((GetSystemMetrics(SM_CYSCREEN) - screenHeight)*0.5);
 	}
 
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP, posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
