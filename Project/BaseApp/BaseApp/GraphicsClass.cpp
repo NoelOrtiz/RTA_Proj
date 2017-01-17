@@ -165,14 +165,7 @@ bool GraphicsClass::Render()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projMatrix);
 
-	
-	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
-	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(viewMatrix.r[3].m128_f32[0], viewMatrix.r[3].m128_f32[1], viewMatrix.r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
-	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, m_Camera->ViewM(), XMMatrixIdentity(), projMatrix);
-	if (!result)
-		return false;
-
-	m_Direct3D->Clear();
+	//m_Direct3D->Clear();
 
 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
@@ -181,7 +174,11 @@ bool GraphicsClass::Render()
 	if (!result)
 		return false;
 	
-	
+	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
+	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(m_Camera->ViewM().r[3].m128_f32[0], m_Camera->ViewM().r[3].m128_f32[1], m_Camera->ViewM().r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
+	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, m_Camera->ViewM(), XMMatrixIdentity(), projMatrix);
+	if (!result)
+		return false;
 
 	//m_Direct3D->GetDeviceContext()->RSSetState(nullptr);
 	//m_Direct3D->GetDeviceContext()->OMSetDepthStencilState(nullptr, 0);
