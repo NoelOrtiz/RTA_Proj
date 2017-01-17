@@ -31,9 +31,9 @@ PixelInputType VShader(VertexInputType input)
 	input.lpos.z += input.instPos.z;
 	input.lpos.w = 1.0f;
 	output.hpos = mul(input.lpos, world);
+	
+	//output world matrix to W_POS for lighting
 	float4 Worldpos = output.hpos;
-
-	//output world matrix to W_POS
 
 	output.hpos = mul(output.hpos, view);
 	output.hpos = mul(output.hpos, proj);
