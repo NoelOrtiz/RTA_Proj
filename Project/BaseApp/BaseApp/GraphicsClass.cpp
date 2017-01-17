@@ -170,7 +170,6 @@ bool GraphicsClass::Render()
 
 	//m_Direct3D->Clear();
 
-
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), m_Model->GetInstanceCount(), worldMatrix, viewMatrix, projMatrix);
