@@ -26,7 +26,7 @@ SamplerState smpState : register (s1);
 
 float4 PShader(PixelInputType input) : SV_TARGET
 {
-	float4 texturecolor = groundTexture.Sample(smpState, input.col);
+	float4 texturecolor = groundTexture.Sample(smpState, input.col.xy);
 float3 norm = { 0,1,0 };
 //float4 color = { .5,.5,.5,1 };
 //float3 direction = { -1.0f, -0.75f, 0.0f }; 
