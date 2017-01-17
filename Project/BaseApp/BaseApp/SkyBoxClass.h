@@ -22,6 +22,8 @@ private:
 
 	ID3D11Buffer* m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
+	XMMATRIX m_worldMatrix;
+
 
 public:
 	SkyBoxClass();
@@ -31,8 +33,11 @@ public:
 	bool Initialize(ID3D11Device*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
+	void GetWorldMatrix(XMMATRIX&);
+
 
 	int GetIndexCount();
+
 };
 
 #endif

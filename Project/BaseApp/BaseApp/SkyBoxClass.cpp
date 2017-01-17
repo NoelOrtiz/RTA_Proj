@@ -7,6 +7,8 @@ SkyBoxClass::SkyBoxClass()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
+	m_worldMatrix = XMMatrixIdentity();
+
 }
 
 SkyBoxClass::SkyBoxClass(const SkyBoxClass& other)
@@ -56,7 +58,7 @@ bool SkyBoxClass::InitializeBuffers(ID3D11Device* device)
 	indices = new unsigned long[m_indexCount];
 	if (!indices)
 		return false;
-
+	
 	vertices[0].position = XMFLOAT3(-2, -2, 2);
 	vertices[1].position = XMFLOAT3(2, -2, 2);
 	vertices[2].position = XMFLOAT3(-2, -2, -2);
@@ -188,4 +190,9 @@ void SkyBoxClass::RenderBuffers(ID3D11DeviceContext* context)
 	context->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+}
+
+void SkyBoxClass::GetWorldMatrix(XMMATRIX& world)
+{
+	world = m_worldMatrix;
 }

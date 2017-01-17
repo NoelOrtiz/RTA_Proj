@@ -43,6 +43,8 @@ public:
 	bool Render(ID3D11DeviceContext*, int, int, XMMATRIX, XMMATRIX, XMMATRIX);
 
 	D3DClass* d3d;
+
+	bool renderSky = false;
 };
 
 

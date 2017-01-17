@@ -68,7 +68,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-
 	m_Shader = new ShaderClass;
 	if (!m_Shader)
 		return false;
@@ -155,13 +154,17 @@ bool GraphicsClass::Frame()
 
 bool GraphicsClass::Render()
 {
-	XMMATRIX viewMatrix, projMatrix, worldMatrix;
+	XMMATRIX viewMatrix, projMatrix, worldMatrix, skyView;
 	bool result;
 
 	m_Direct3D->BeginScene(0.7f, 0.5f, 0.7f, 1.0f);
 
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(viewMatrix);
+	skyView = XMMatrixIdentity();
+	skyView.r[3].m128_f32[0] = viewMatrix.r[3].m128_f32[0];
+	skyView.r[3].m128_f32[1] = viewMatrix.r[3].m128_f32[1];
+	skyView.r[3].m128_f32[2] = viewMatrix.r[3].m128_f32[2];
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projMatrix);
 
@@ -174,9 +177,10 @@ bool GraphicsClass::Render()
 	if (!result)
 		return false;
 	
+	m_Shader->renderSky = true;
 	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
-	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(m_Camera->ViewM().r[3].m128_f32[0], m_Camera->ViewM().r[3].m128_f32[1], m_Camera->ViewM().r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
-	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, m_Camera->ViewM(), XMMatrixIdentity(), projMatrix);
+	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(m_Camera->ViewM().r[3].m128_f32[0], m_Camera->ViewM().r[3].m128_f32[1], m_Camera->ViewM().r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
+	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, skyView , XMMatrixInverse(0,m_Camera->ViewM()), projMatrix);
 	if (!result)
 		return false;
 

@@ -137,6 +137,9 @@ void CameraClass::Render()
 
 	}
 
+
+	
+
 	m_viewMatrix = XMMatrixInverse(0, m_viewMatrix);
 
 	point = newPos;
