@@ -28,15 +28,6 @@ float4 PShader(PixelInputType input) : SV_TARGET
 {
 	float4 texturecolor = groundTexture.Sample(smpState, input.col.xy);
 float3 norm = { 0,1,0 };
-//float4 color = { .5,.5,.5,1 };
-//float3 direction = { -1.0f, -0.75f, 0.0f }; 
-//float4 pointPosition = { 5, 3, 0, 1 };
-//float4 pointColor = { 0.0f, 1.0f, 1.0f, 1.0f };
-//float pointRadius = 10.0f;
-//float4 spotColor = { 1.0f, 1.0f, 0.0f, 1.0f };
-//float4 spotDirection = { 0, 0, 1, 1 };
-//float4 spotPosition = { -5, 3, -5, 1 };
-//float spotRadius = 0.93f;
 
 float directionRatio = saturate(dot(-direction, input.normal));
 float4 directionResult = directionRatio * color;

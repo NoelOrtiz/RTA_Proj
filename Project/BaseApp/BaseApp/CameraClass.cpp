@@ -11,6 +11,7 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;	
+	m_viewMatrix = XMMatrixIdentity();
 }
 
 CameraClass::CameraClass(const CameraClass& other)
@@ -145,4 +146,9 @@ void CameraClass::Render()
 void CameraClass::GetViewMatrix(XMMATRIX& view)
 {
 	view = m_viewMatrix;
+}
+
+XMMATRIX CameraClass::ViewM()
+{
+	return m_viewMatrix;
 }
