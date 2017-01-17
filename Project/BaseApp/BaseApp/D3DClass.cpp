@@ -346,6 +346,13 @@ void D3DClass::EndScene()
 	return;
 }
 
+void D3DClass::Clear()
+{
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	return;
+}
+
 ID3D11Device* D3DClass::GetDevice()
 {
 	return m_device;

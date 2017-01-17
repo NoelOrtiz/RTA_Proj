@@ -11,6 +11,7 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;	
+	m_viewMatrix = XMMatrixIdentity();
 }
 
 CameraClass::CameraClass(const CameraClass& other)

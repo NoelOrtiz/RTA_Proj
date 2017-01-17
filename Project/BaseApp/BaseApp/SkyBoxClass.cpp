@@ -57,14 +57,14 @@ bool SkyBoxClass::InitializeBuffers(ID3D11Device* device)
 	if (!indices)
 		return false;
 
-	vertices[0].position = XMFLOAT3(-2, 1, 2);
-	vertices[1].position = XMFLOAT3(2, 1, 2);
-	vertices[2].position = XMFLOAT3(-2, 1, -2);
-	vertices[3].position = XMFLOAT3(2, 1, -2);
-	vertices[4].position = XMFLOAT3(-2, 4, 2);
-	vertices[5].position = XMFLOAT3(2, 4, 2);
-	vertices[6].position = XMFLOAT3(-2, 4, -2);
-	vertices[7].position = XMFLOAT3(2, 4, -2);
+	vertices[0].position = XMFLOAT3(-2, -2, 2);
+	vertices[1].position = XMFLOAT3(2, -2, 2);
+	vertices[2].position = XMFLOAT3(-2, -2, -2);
+	vertices[3].position = XMFLOAT3(2, -2, -2);
+	vertices[4].position = XMFLOAT3(-2, 2, 2);
+	vertices[5].position = XMFLOAT3(2, 2, 2);
+	vertices[6].position = XMFLOAT3(-2, 2, -2);
+	vertices[7].position = XMFLOAT3(2, 2, -2);
 
 	vertices[0].color = XMFLOAT4(1, 0, 1, 1);
 	vertices[1].color = XMFLOAT4(1, 0, 1, 1);

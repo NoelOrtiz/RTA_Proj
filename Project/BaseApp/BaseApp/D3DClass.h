@@ -33,6 +33,8 @@ public:
 	void BeginScene(float, float, float, float);
 	void EndScene();
 
+	void Clear();
+
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 

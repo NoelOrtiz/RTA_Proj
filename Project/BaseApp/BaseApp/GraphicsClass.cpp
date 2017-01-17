@@ -56,6 +56,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_Model->d3d = m_Direct3D;
+
 	m_SkyBox = new SkyBoxClass;
 	if (!m_SkyBox)
 		return false;
@@ -66,7 +67,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not Initialize skybox object", L"Model Error", MB_OK);
 		return false;
 	}
-
 
 
 	m_Shader = new ShaderClass;
@@ -165,21 +165,26 @@ bool GraphicsClass::Render()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projMatrix);
 
+	
+	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
+	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(viewMatrix.r[3].m128_f32[0], viewMatrix.r[3].m128_f32[1], viewMatrix.r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
+	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, m_Camera->ViewM(), XMMatrixIdentity(), projMatrix);
+	if (!result)
+		return false;
+
+	m_Direct3D->Clear();
+
+
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), m_Model->GetInstanceCount(), worldMatrix, viewMatrix, projMatrix);
 	if (!result)
 		return false;
 	
-	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
-	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(m_Camera->ViewM().r[3].m128_f32[0], m_Camera->ViewM().r[3].m128_f32[1], m_Camera->ViewM().r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
-	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), XMMatrixTranslation(m_Camera->GetPosition().x, m_Camera->GetPosition().y, m_Camera->GetPosition().z), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
-	if (!result)
-		return false;
 	
 
-	m_Direct3D->GetDeviceContext()->RSSetState(nullptr);
-	m_Direct3D->GetDeviceContext()->OMSetDepthStencilState(nullptr, 0);
+	//m_Direct3D->GetDeviceContext()->RSSetState(nullptr);
+	//m_Direct3D->GetDeviceContext()->OMSetDepthStencilState(nullptr, 0);
 
 	m_Direct3D->EndScene();
 	return true;
