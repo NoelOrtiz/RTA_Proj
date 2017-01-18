@@ -10,8 +10,10 @@ D3DClass::D3DClass()
 	m_renderTargetView = 0;
 	m_depthStencilBuffer = 0;
 	m_depthStencilState = 0;
+	m_disabledStencilState = 0;
 	m_depthStencilView = 0;
 	m_rasterState = 0;
+	noCull = 0;
 }
 
 D3DClass::D3DClass(const D3DClass& other)
@@ -186,6 +188,13 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vSync, HWND hw
 
 	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 
+	//Testing for skybox
+	depthStencilDesc.DepthEnable = false;
+
+	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_disabledStencilState);
+	if (FAILED(result))
+		return false;
+
 	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -214,6 +223,49 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vSync, HWND hw
 
 	m_deviceContext->RSSetState(m_rasterState);
 
+	renderTargetblend.BlendEnable = true;
+	renderTargetblend.SrcBlend = D3D11_BLEND_SRC_COLOR;
+	renderTargetblend.DestBlend = D3D11_BLEND_BLEND_FACTOR;
+	renderTargetblend.BlendOp = D3D11_BLEND_OP_ADD;
+	renderTargetblend.SrcBlendAlpha = D3D11_BLEND_ONE;
+	renderTargetblend.DestBlendAlpha = D3D11_BLEND_ZERO;
+	renderTargetblend.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	renderTargetblend.RenderTargetWriteMask = D3D10_COLOR_WRITE_ENABLE_ALL;
+
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = 0;
+	blendDesc.RenderTarget[0] = renderTargetblend;
+
+	//transparency = 0;
+	HRESULT hr;
+	hr = m_device->CreateBlendState(&blendDesc, &transparency);
+
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+
+	rasterDesc.FrontCounterClockwise = true;
+	m_device->CreateRasterizerState(&rasterDesc, &counterClockwise);
+
+	rasterDesc.FrontCounterClockwise = false;
+	m_device->CreateRasterizerState(&rasterDesc, &clockwise);
+
+
+	//Testing for skybox
+	rasterDesc.AntialiasedLineEnable = false;
+	rasterDesc.CullMode = D3D11_CULL_NONE;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.FrontCounterClockwise = false;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	result = m_device->CreateRasterizerState(&rasterDesc, &noCull);
+
+
+
 	viewport.Width = (float)screenWidth;
 	viewport.Height = (float)screenHeight;
 	viewport.MinDepth = 0.0f;
@@ -231,6 +283,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vSync, HWND hw
 	m_worldMatrix = XMMatrixIdentity();
 
 	// TODO: Camera/View matrix goes here.
+	
 
 	// For HUD elements
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
@@ -250,6 +303,12 @@ void D3DClass::Shutdown()
 		m_rasterState = 0;
 	}
 
+	if (noCull)
+	{
+		noCull->Release();
+		noCull = 0;
+	}
+
 	if (m_depthStencilView)
 	{
 		m_depthStencilView->Release();
@@ -260,6 +319,12 @@ void D3DClass::Shutdown()
 	{
 		m_depthStencilState->Release();
 		m_depthStencilState = 0;
+	}
+
+	if (m_disabledStencilState)
+	{
+		m_disabledStencilState->Release();
+		m_disabledStencilState = 0;
 	}
 
 	if (m_depthStencilBuffer)
@@ -317,6 +382,13 @@ void D3DClass::EndScene()
 	return;
 }
 
+void D3DClass::Clear()
+{
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	return;
+}
+
 ID3D11Device* D3DClass::GetDevice()
 {
 	return m_device;
@@ -352,4 +424,29 @@ void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
 	return;
+}
+
+void D3DClass::TurnOnZBuffer()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
+}
+
+void D3DClass::TurnOffZBuffer()
+{
+	m_deviceContext->OMSetDepthStencilState(m_disabledStencilState, 1);
+}
+
+void D3DClass::TurnCullinOn()
+{
+	m_deviceContext->RSSetState(m_rasterState);
+}
+
+void D3DClass::TurnCullinOff()
+{
+	m_deviceContext->RSSetState(noCull);
+}
+
+D3DClass* D3DClass::GetD3DInstance()
+{
+	return this;
 }

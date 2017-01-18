@@ -9,8 +9,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <fstream>
-
-
+#include "D3DClass.h"
 using namespace DirectX;
 using namespace std;
 
@@ -31,7 +30,7 @@ private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void ShutdownShader();
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX);
-	void RenderShader(ID3D11DeviceContext*, int);
+	void RenderShader(ID3D11DeviceContext*, int, int);
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 public:
@@ -41,7 +40,11 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX);
+	bool Render(ID3D11DeviceContext*, int, int, XMMATRIX, XMMATRIX, XMMATRIX);
+
+	D3DClass* d3d;
+
+	bool renderSky = false;
 };
 
 

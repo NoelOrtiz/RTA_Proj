@@ -2,26 +2,39 @@
 
 #include <Windows.h>
 #include <DirectXMath.h>
+#include "D3DClass.h"
 
+using namespace DirectX;
 
 class Light
 {
 public:
-		DirectX::XMFLOAT3 direction;
+	struct Lights {
+
+		XMFLOAT3 direction;
 		float pointRadius;
-		DirectX::XMFLOAT4 dirColor;
+		XMFLOAT4 dirColor;
 
-		DirectX::XMFLOAT4 pointPosition;
-		DirectX::XMFLOAT4 pointColor;
+		XMFLOAT4 pointPosition;
+		XMFLOAT4 pointColor;
 
-		DirectX::XMFLOAT4 spotColor;
-		DirectX::XMFLOAT4 spotPosition;
-		DirectX::XMFLOAT4 spotDirection;
+		XMFLOAT4 spotColor;
+		XMFLOAT4 spotPosition;
+		XMFLOAT4 spotDirection;
 		float spotRadius;
 
-		DirectX::XMFLOAT3 padding;
+		XMFLOAT3 padding;
+	};
 
-		DirectX::XMFLOAT4 camPosition;
+
+
+	ID3D11Buffer *lightBuffer;
+
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext* context);
+	bool InitializeBuffers(ID3D11Device*, ID3D11DeviceContext* context);
+	bool SetLightParameters(ID3D11DeviceContext*, Lights light);
+
+	void ShutdownBuffers();
 
 	Light();
 	~Light();

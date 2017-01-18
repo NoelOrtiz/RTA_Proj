@@ -20,11 +20,21 @@ public:
 	D3DClass(const D3DClass&);
 	~D3DClass();
 
+	ID3D11BlendState* transparency;
+	ID3D11RasterizerState* counterClockwise;
+	ID3D11RasterizerState* clockwise;
+	ID3D11RasterizerState* noCull;
+	D3D11_BLEND_DESC blendDesc;
+	D3D11_RENDER_TARGET_BLEND_DESC renderTargetblend;
+	D3D11_RASTERIZER_DESC rasterDesc;
+
 	bool Initialize(int, int, bool, HWND, bool, float, float);
 	void Shutdown();
 
 	void BeginScene(float, float, float, float);
 	void EndScene();
+
+	void Clear();
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
@@ -34,6 +44,14 @@ public:
 	void GetOrthoMatrix(XMMATRIX&);
 
 	void GetVideoCardInfo(char*, int&);
+
+	void TurnOnZBuffer();
+	void TurnOffZBuffer();
+
+	void TurnCullinOn();
+	void TurnCullinOff();
+
+	D3DClass* GetD3DInstance();
 
 private:
 	bool m_vsync_enabled;
@@ -45,10 +63,12 @@ private:
 	ID3D11RenderTargetView* m_renderTargetView;
 	ID3D11Texture2D* m_depthStencilBuffer;
 	ID3D11DepthStencilState* m_depthStencilState;
+	ID3D11DepthStencilState* m_disabledStencilState;
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RasterizerState* m_rasterState;
 	XMMATRIX m_projectionMatrix, m_worldMatrix, m_orthoMatrix;
 
+	
 
 };
 
