@@ -2,7 +2,19 @@
 // provided by rastertek.com (DX11 Series 2)
 
 #include "ShaderClass.h"
+#include "Facade.h"
 
+
+const DWORD modelNum = 5;
+
+char files[modelNum][256] =
+{
+	"Box_Attack.fbx",
+	"Box_Idle.fbx",
+	"Box_Jump.fbx",
+	"Box_Walk.fbx",
+	"Death.fbx",
+};
 ShaderClass::ShaderClass()
 {
 	m_vertexShader = 0;
@@ -47,14 +59,43 @@ bool ShaderClass::Render(ID3D11DeviceContext* context, int indexCount, XMMATRIX 
 
 bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
+	ID3D10Blob* FBXVertBuffer;
+	ID3D10Blob* FBXIndexBuffer;
+	D3D11_INPUT_ELEMENT_DESC FBXLayout[3];
+	unsigned int elements;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
+	HRESULT hr = S_OK;
+	//for (DWORD i = 0; i < modelNum; i++)
+	//{
+	//	loader[i] = new FBXLoader();
+	//	hr = loader[i]->LoadFBX(files[i]);
+	//}
+	//vector<Vertex> storedInfo;
+	//EXP::Facade myF;
+	//storedInfo = myF.getVertices(storedInfo, "Box_Attack.fbx");
 
+	
+
+	//int count1 = loader[0]->GetNodesCount();
+	//int count2 = loader[1]->GetNodesCount();
+	//int count3 = loader[2]->GetNodesCount();
+	//int count4 = loader[3]->GetNodesCount();
+	//int count5 = loader[4]->GetNodesCount();
+	
+	//for (unsigned int i = 0; i < count1; i++)
+	//{
+	//	FBX_Node newNode = loader[0]->GetNode(i);
+	//	newNode.indexArray;
+	//	
+	//}
+	
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
@@ -149,6 +190,7 @@ void ShaderClass::ShutdownShader()
 		m_vertexShader->Release();
 		m_vertexShader = 0;
 	}
+
 }
 
 // legacy function? DX10 protocols. here for inclusion's sake

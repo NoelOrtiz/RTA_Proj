@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{f0a212ad-aef1-41f7-aef2-eced168a5dbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{f9f8ea30-5f89-46dd-abc3-3f1a320051bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -43,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShaderClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FBXLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,9 +77,6 @@
     <ClInclude Include="ShaderClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseApp.rc">
@@ -99,5 +96,22 @@
     <FxCompile Include="PassThruVS.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Box_Attack.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Box_Idle.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Box_Jump.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Box_Walk.fbx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Death.fbx">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
