@@ -236,7 +236,6 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX wor
 	MatrixBufferType* dataPtr;
 	unsigned int bufferNumber;
 
-	
 
 	world = XMMatrixTranspose(world);
 	view = XMMatrixTranspose(view);
