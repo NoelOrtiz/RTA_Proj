@@ -1,0 +1,11 @@
+Theory:
+
+	Create a copy of ModelClass.h/cpp and ShaderClass.h/cpp (something like SphereModelClass or whatever makes sense)
+	Change the base vertex, index, and shader information (may be best to write simple pass-through shaders for now)
+		Don't forget that we're using DrawIndexed and DrawIndexedInstanced. You shouldn't need the instance stuff, but if it's easier to leave it in, we can just set the numInstances to 1.
+	In GraphicsClass.cpp, create the class object, initialize, and Render() where appropriate.
+		// If everything goes well on my end, I'll be cleaning up GraphicsClass::Render() to make things easier to read.
+		Cleaned up. Areas that are model-specific have been commented. Should just need to duplicate those calls for any other model. Testing begins.
+
+That should be it. Let me know if this doesn't work out.
+	

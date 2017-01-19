@@ -8,9 +8,13 @@ GraphicsClass::GraphicsClass()
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
+
+	///		Begin Ground Quad		///
 	m_Model = 0;
-	m_SkyBox = 0;
 	m_Shader = 0;
+	///		End Ground Quad		///
+
+	//m_SkyBox = 0;
 }
 
 
@@ -44,6 +48,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	m_Camera->SetPosition(0.0f, 1.0f, -10.0f);
 
+	///		Begin Ground Quad		///
+
 	m_Model = new ModelClass;
 	if (!m_Model)
 		return false;
@@ -57,17 +63,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Model->d3d = m_Direct3D;
 
-	m_SkyBox = new SkyBoxClass;
-	if (!m_SkyBox)
-		return false;
-
-	result = m_SkyBox->Initialize(m_Direct3D->GetDevice());
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not Initialize skybox object", L"Model Error", MB_OK);
-		return false;
-	}
-
 	m_Shader = new ShaderClass;
 	if (!m_Shader)
 		return false;
@@ -80,6 +75,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 	m_Shader->d3d = m_Direct3D;
 
+	///		End Ground Quad		///
+
+
 	m_Light = new Light;
 	if (!m_Light)
 		return false;
@@ -91,7 +89,17 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	
+
+	//m_SkyBox = new SkyBoxClass;
+	//if (!m_SkyBox)
+	//	return false;
+
+	//result = m_SkyBox->Initialize(m_Direct3D->GetDevice());
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not Initialize skybox object", L"Model Error", MB_OK);
+	//	return false;
+	//}
 	return true;
 }
 
@@ -154,37 +162,22 @@ bool GraphicsClass::Frame()
 
 bool GraphicsClass::Render()
 {
-	XMMATRIX viewMatrix, projMatrix, worldMatrix, skyView;
+	XMMATRIX viewMatrix, projMatrix, worldMatrix;
 	bool result;
 
 	m_Direct3D->BeginScene(0.7f, 0.5f, 0.7f, 1.0f);
 
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(viewMatrix);
-	skyView = XMMatrixIdentity();
-	skyView.r[3].m128_f32[0] = viewMatrix.r[3].m128_f32[0];
-	skyView.r[3].m128_f32[1] = viewMatrix.r[3].m128_f32[1];
-	skyView.r[3].m128_f32[2] = viewMatrix.r[3].m128_f32[2];
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projMatrix);
 
-	//m_Direct3D->Clear();
-
+	///		Begin Ground Quad		///
 	m_Model->Render(m_Direct3D->GetDeviceContext());
-
 	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), m_Model->GetInstanceCount(), worldMatrix, viewMatrix, projMatrix);
 	if (!result)
 		return false;
-	
-	m_Shader->renderSky = true;
-	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
-	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(m_Camera->ViewM().r[3].m128_f32[0], m_Camera->ViewM().r[3].m128_f32[1], m_Camera->ViewM().r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
-	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixInverse(0,m_Camera->ViewM()), viewMatrix, projMatrix);
-	if (!result)
-		return false;
-
-	//m_Direct3D->GetDeviceContext()->RSSetState(nullptr);
-	//m_Direct3D->GetDeviceContext()->OMSetDepthStencilState(nullptr, 0);
+	///		End Ground Quad		///
 
 	m_Direct3D->EndScene();
 	return true;
