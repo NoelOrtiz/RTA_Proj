@@ -28,10 +28,10 @@ namespace  EXP
 	class DLLEXPORT1 Facade
 	{
 	public:
-		vector<Vertex> numVertices;
-		vector<Normal> norms;
-		vector<UV> uvs;
+		std::vector<Vertex> numVertices;
+		std::vector<Normal> norms;
+		std::vector<UV> uvs;
 		bool success = false;
-		vector<Vertex> getVertices(vector<Vertex> fillOut, const char* filepath);
+		std::vector<Vertex> getVertices(std::vector<Vertex> fillOut, const char* filepath);
 	};
 }

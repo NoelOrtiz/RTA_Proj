@@ -166,11 +166,11 @@ bool SkyBoxClass::InitializeBuffers(ID3D11Device* device)
 
 void SkyBoxClass::ShutdownBuffers()
 {
-	if (m_indexBuffer)
-	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
-	}
+	//if (m_indexBuffer)
+	//{
+	//	m_indexBuffer->Release();
+	//	m_indexBuffer = 0;
+	//}
 	if (m_vertexBuffer)
 	{
 		m_vertexBuffer->Release();

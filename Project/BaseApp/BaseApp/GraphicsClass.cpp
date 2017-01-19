@@ -14,6 +14,9 @@ GraphicsClass::GraphicsClass()
 	m_Shader = 0;
 	///		End Ground Quad		///
 
+	m_BoxModel = 0;
+	m_BoxShader = 0;
+
 	//m_SkyBox = 0;
 }
 
@@ -77,6 +80,33 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	///		End Ground Quad		///
 
+	///		Begin Box		///
+	m_BoxModel = new BoxModelClass;
+	if (!m_BoxModel)
+		return false;
+
+	result = m_BoxModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not Initialize BoxModel object", L"BoxModel Error", MB_OK);
+		return false;
+	}
+
+	m_BoxModel->d3d = m_Direct3D;
+
+	m_BoxShader = new BoxShaderClass;
+	if (!m_BoxShader)
+		return false;
+
+	result = m_BoxShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize BoxShader object", L"BoxShader Error", MB_OK);
+		return false;
+	}
+	m_BoxShader->d3d = m_Direct3D;
+	///		End Box		///
+
 
 	m_Light = new Light;
 	if (!m_Light)
@@ -121,12 +151,12 @@ void GraphicsClass::Shutdown()
 		m_Model = 0;
 	}
 
-	if (m_SkyBox)
-	{
-		m_SkyBox->Shutdown();
-		delete m_SkyBox;
-		m_SkyBox = 0;
-	}
+	//if (m_SkyBox)
+	//{
+	//	m_SkyBox->Shutdown();
+	//	delete m_SkyBox;
+	//	m_SkyBox = 0;
+	//}
 
 	if (m_Camera)
 	{
@@ -178,6 +208,13 @@ bool GraphicsClass::Render()
 	if (!result)
 		return false;
 	///		End Ground Quad		///
+
+	///		Begin Box Model		///
+	m_BoxModel->Render(m_Direct3D->GetDeviceContext());
+	result = m_BoxShader->Render(m_Direct3D->GetDeviceContext(), m_BoxModel->GetIndexCount(), NULL, worldMatrix, viewMatrix, projMatrix);
+	if (!result)
+		return false;
+	///		End Box Model		///
 
 	m_Direct3D->EndScene();
 	return true;

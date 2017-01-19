@@ -54,6 +54,12 @@
     <ClCompile Include="SkyBoxClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BoxModelClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxShaderClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -89,6 +95,12 @@
     <ClInclude Include="SkyBoxClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BoxModelClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxShaderClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseApp.rc">
@@ -109,6 +121,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxShader_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BoxPS.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BoxVS.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -8,8 +8,12 @@
 #include "D3DClass.h"
 #include "CameraClass.h"
 #include "ModelClass.h"
-#include "SkyBoxClass.h"
 #include "ShaderClass.h"
+
+#include "BoxModelClass.h"
+#include "BoxShaderClass.h"
+
+#include "SkyBoxClass.h"
 #include "Light.h"
 
 
@@ -33,10 +37,20 @@ private:
 	bool Render();
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
+	
+	// Ground Quad
 	ModelClass* m_Model;
-	SkyBoxClass* m_SkyBox;
 	ShaderClass* m_Shader;
+
+	// Box Model
+	BoxModelClass* m_BoxModel;
+	BoxShaderClass* m_BoxShader;
+
+
 	Light* m_Light;
+	
+	
+	//SkyBoxClass* m_SkyBox;
 };
 
 
