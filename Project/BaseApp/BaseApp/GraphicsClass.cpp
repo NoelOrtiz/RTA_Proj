@@ -179,7 +179,7 @@ bool GraphicsClass::Render()
 	m_Shader->renderSky = true;
 	m_SkyBox->Render(m_Direct3D->GetDeviceContext());
 	//result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixTranslation(m_Camera->ViewM().r[3].m128_f32[0], m_Camera->ViewM().r[3].m128_f32[1], m_Camera->ViewM().r[3].m128_f32[2]), XMMatrixInverse(nullptr, m_Camera->ViewM()), projMatrix);
-	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, skyView , XMMatrixInverse(0,m_Camera->ViewM()), projMatrix);
+	result = m_Shader->Render(m_Direct3D->GetDeviceContext(), m_SkyBox->GetIndexCount(), 1, XMMatrixInverse(0,m_Camera->ViewM()), viewMatrix, projMatrix);
 	if (!result)
 		return false;
 
