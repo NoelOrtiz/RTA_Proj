@@ -6,19 +6,24 @@ namespace EXP
 {
 	vector<Vertex> Facade::getVertices(vector<Vertex> fillOut, const char* filepath)
 	{
-		FBXExporter* exporter;
+		FBXExporter* exporter = new FBXExporter();
 		exporter->Initialize();
 		exporter->LoadScene(filepath);
 		FbxScene* temp = exporter->getScene();
-		exporter->ProcessControlPoints(temp->GetRootNode());
+		FbxNode* tempNode = temp->GetRootNode();
+		int tracker = temp->GetNodeCount();
+		exporter->ProcessControlPoints(tempNode);
 		exporter->ProcessMesh(temp->GetRootNode());
 
 		for (int i = 0; i < exporter->getVertices().size(); i++)
 		{
+			Vertex obj;
 			vector<PNTIWVertex> temp = exporter->getVertices();
-			fillOut[i].x = temp[i].mPosition.x;
-			fillOut[i].y = temp[i].mPosition.y;
-			fillOut[i].z = temp[i].mPosition.z;
+			
+			obj.x = temp[i].mPosition.x;
+			obj.y = temp[i].mPosition.y;
+			obj.z = temp[i].mPosition.z;
+			fillOut.push_back(obj);
 		}
 		return fillOut;
 	}

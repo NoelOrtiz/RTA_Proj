@@ -8,9 +8,9 @@
 #endif
 struct Vertex
 {
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
 
 struct Normal

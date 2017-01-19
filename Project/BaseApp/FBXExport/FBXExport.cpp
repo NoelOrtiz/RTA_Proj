@@ -22,6 +22,8 @@ namespace Exporter
 
 	bool FBXExporter::Initialize()
 	{
+
+		//mFBXManager->Create();
 		mFBXManager = FbxManager::Create();
 		if (!mFBXManager)
 		{
@@ -39,7 +41,15 @@ namespace Exporter
 	void FBXExporter::ProcessControlPoints(FbxNode* inNode)
 	{
 		FbxMesh* currMesh = inNode->GetMesh();
-		unsigned int ctrlPointCount = currMesh->GetControlPointsCount();
+		if (currMesh == nullptr)
+		{
+			int tracker = 0;
+			tracker = inNode->GetChildCount(false);
+			currMesh = inNode->GetChild(0)->GetMesh();
+		}
+		unsigned int ctrlPointCount = 0;
+		ctrlPointCount = currMesh->GetControlPointsCount();
+
 		for (unsigned int i = 0; i < ctrlPointCount; ++i)
 		{
 			CtrlPoint* currCtrlPoint = new CtrlPoint();
@@ -160,7 +170,12 @@ namespace Exporter
 	void FBXExporter::ProcessMesh(FbxNode* inNode)
 	{
 		FbxMesh* currMesh = inNode->GetMesh();
-
+		if (currMesh == nullptr)
+		{
+			int tracker = 0;
+			tracker = inNode->GetChildCount(false);
+			currMesh = inNode->GetChild(0)->GetMesh();
+		}
 		mTriangleCount = currMesh->GetPolygonCount();
 		int vertexCounter = 0;
 

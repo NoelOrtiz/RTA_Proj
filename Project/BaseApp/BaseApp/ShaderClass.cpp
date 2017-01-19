@@ -73,25 +73,12 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	//	loader[i] = new FBXLoader();
 	//	hr = loader[i]->LoadFBX(files[i]);
 	//}
-	//vector<Vertex> storedInfo;
-	//EXP::Facade myF;
-	//storedInfo = myF.getVertices(storedInfo, "Box_Attack.fbx");
 
-	
+	vector<Vertex> storedInfo;
+	EXP::Facade myF;
+	storedInfo = myF.getVertices(storedInfo, "Box_Attack.fbx");
+	int track = storedInfo.size();
 
-	//int count1 = loader[0]->GetNodesCount();
-	//int count2 = loader[1]->GetNodesCount();
-	//int count3 = loader[2]->GetNodesCount();
-	//int count4 = loader[3]->GetNodesCount();
-	//int count5 = loader[4]->GetNodesCount();
-	
-	//for (unsigned int i = 0; i < count1; i++)
-	//{
-	//	FBX_Node newNode = loader[0]->GetNode(i);
-	//	newNode.indexArray;
-	//	
-	//}
-	
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
