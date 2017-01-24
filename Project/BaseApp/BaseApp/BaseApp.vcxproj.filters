@@ -60,6 +60,12 @@
     <ClCompile Include="BoxShaderClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TeddyModelClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TeddyShaderClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemClass.h">
@@ -101,6 +107,12 @@
     <ClInclude Include="BoxShaderClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TeddyModelClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TeddyShaderClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseApp.rc">
@@ -127,6 +139,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="BoxVS.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TeddyVS.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TeddyPS.fx">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -13,6 +13,9 @@
 #include "BoxModelClass.h"
 #include "BoxShaderClass.h"
 
+#include "TeddyModelClass.h"
+#include "TeddyShaderClass.h"
+
 #include "SkyBoxClass.h"
 #include "Light.h"
 
@@ -46,7 +49,10 @@ private:
 	BoxModelClass* m_BoxModel;
 	BoxShaderClass* m_BoxShader;
 
-
+	// Teddy Model
+	TeddyModelClass* m_TeddyModel;
+	TeddyShaderClass* m_TeddyShader;
+	
 	Light* m_Light;
 	
 	

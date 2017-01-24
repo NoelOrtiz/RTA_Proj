@@ -17,16 +17,16 @@ struct PixelInputType
 	float4 huv : TEXCOORD;
 };
 
-PixelInputType BoxVShader(VertexInputType input)
+PixelInputType TeddyVShader(VertexInputType input)
 {
 	// ToPixelShader:
 	PixelInputType output;
 
 	// Manipulate vert information:
 	input.lpos.w = 1.0f;
-	input.lpos.z += 10.0f;
-	input.lpos.y -= 3.0f;
-	input.lpos.x -= 5.0f;
+	input.lpos.z += 300.0f;
+	input.lpos.y -= 100.0f;
+	//input.lpos.x -= 5.0f;
 
 	output.hpos = mul(input.lpos, world);
 	//output.wpos = output.hpos;			// when needful for lighting
@@ -35,6 +35,6 @@ PixelInputType BoxVShader(VertexInputType input)
 
 	// Manipulate UV information:
 	output.huv = input.luv;
-	
+
 	return output;
 }
