@@ -81,6 +81,7 @@ namespace Exporter
 		}
 	};
 
+	
 	struct Skeleton
 	{
 		vector<Joint> mJoints;
@@ -145,6 +146,7 @@ namespace Exporter
 		void ReadNormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outNormal);
 		void ReadBinormal(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outBinormal);
 		void ReadTangent(FbxMesh* inMesh, int inCtrlPointIndex, int inVertexCounter, XMFLOAT3& outTangent);
+		Skeleton getSkelton() { return mSkeleton; }
 		//void ExportFBX();
 	private:
 

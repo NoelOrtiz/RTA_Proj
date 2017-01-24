@@ -5,6 +5,7 @@
 #include "Facade.h"
 
 
+
 const DWORD modelNum = 5;
 
 char files[modelNum][256] =
@@ -73,8 +74,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	//	loader[i] = new FBXLoader();
 	//	hr = loader[i]->LoadFBX(files[i]);
 	//}
-
-	vector<Vertex> storedInfo;
+	vector<VNUInfo> storedInfo;
 	EXP::Facade myF;
 	storedInfo = myF.getVertices(storedInfo, "Box_Attack.fbx");
 	int track = storedInfo.size();
