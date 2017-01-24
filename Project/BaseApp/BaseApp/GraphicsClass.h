@@ -16,6 +16,12 @@
 #include "TeddyModelClass.h"
 #include "TeddyShaderClass.h"
 
+#include "MageModelClass.h"
+#include "MageShaderClass.h"
+
+#include "BoneSphereModelClass.h"
+#include "BoneSphereShaderClass.h"
+
 #include "SkyBoxClass.h"
 #include "Light.h"
 
@@ -52,7 +58,16 @@ private:
 	// Teddy Model
 	TeddyModelClass* m_TeddyModel;
 	TeddyShaderClass* m_TeddyShader;
+
+	// Mage Model
+	MageModelClass* m_MageModel;
+	MageShaderClass* m_MageShader;
 	
+	// BoneSphere Model
+	BoneSphereModelClass* m_BoneSphereModel;
+	BoneSphereShaderClass* m_BoneSphereShader;
+
+
 	Light* m_Light;
 	
 	

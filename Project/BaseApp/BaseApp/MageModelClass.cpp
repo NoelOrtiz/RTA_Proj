@@ -1,23 +1,23 @@
 // Base Application Setup Instructions
 // provided by rastertek.com (DX11 Series 2)
 
-#include "TeddyModelClass.h"
+#include "MageModelClass.h"
 #include "DDSTextureLoader.h"
 #include "Facade.h"
 
-TeddyModelClass::TeddyModelClass()
+MageModelClass::MageModelClass()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 }
 
-TeddyModelClass::TeddyModelClass(const TeddyModelClass& other)
+MageModelClass::MageModelClass(const MageModelClass& other)
 {}
 
-TeddyModelClass::~TeddyModelClass()
+MageModelClass::~MageModelClass()
 {}
 
-bool TeddyModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+bool MageModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	bool result;
 	result = InitializeBuffers(device, context);
@@ -26,22 +26,22 @@ bool TeddyModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* cont
 	return true;
 }
 
-void TeddyModelClass::Shutdown()
+void MageModelClass::Shutdown()
 {
 	ShutdownBuffers();
 }
 
-void TeddyModelClass::Render(ID3D11DeviceContext* context)
+void MageModelClass::Render(ID3D11DeviceContext* context)
 {
 	RenderBuffers(context);
 }
 
-int TeddyModelClass::GetIndexCount()
+int MageModelClass::GetIndexCount()
 {
 	return m_indexCount;
 }
 
-bool TeddyModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context)
+bool MageModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	VertexType* vertices;
 	unsigned int* indices;
@@ -57,7 +57,7 @@ bool TeddyModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContex
 	std::vector<VNUInfo> fbxVerts;
 
 	EXP::Facade myF;
-	fbxVerts = myF.getVertices(fbxVerts, "Teddy_Attack1.fbx");
+	fbxVerts = myF.getVertices(fbxVerts, "Idle.fbx");
 	//getIndices?
 
 	m_vertexCount = fbxVerts.size();
@@ -135,7 +135,7 @@ bool TeddyModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContex
 	return true;
 }
 
-void TeddyModelClass::ShutdownBuffers()
+void MageModelClass::ShutdownBuffers()
 {
 	if (m_indexBuffer)
 	{
@@ -150,7 +150,7 @@ void TeddyModelClass::ShutdownBuffers()
 }
 
 
-void TeddyModelClass::RenderBuffers(ID3D11DeviceContext* context)
+void MageModelClass::RenderBuffers(ID3D11DeviceContext* context)
 {
 	unsigned stride[2];
 	unsigned offset[2];

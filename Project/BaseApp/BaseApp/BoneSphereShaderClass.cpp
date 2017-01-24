@@ -1,20 +1,17 @@
 // Base Application Setup Instructions
 // provided by rastertek.com (DX11 Series 2)
 
-#include "TeddyShaderClass.h"
+#include "BoneSphereShaderClass.h"
 #include "Facade.h"
+
 
 const DWORD modelNum = 5;
 
-char files2[modelNum][256] =
+char files3[modelNum][256] =
 {
-	"Teddy_Attack.fbx",
-	"Teddy_Idle.fbx",
-	"Teddy_Jump.fbx",
-	"Teddy_Walk.fbx",
-	"Death.fbx",
+	"Bone.fbx",
 };
-TeddyShaderClass::TeddyShaderClass()
+BoneSphereShaderClass::BoneSphereShaderClass()
 {
 	m_vertexShader = 0;
 	m_pixelShader = 0;
@@ -22,28 +19,28 @@ TeddyShaderClass::TeddyShaderClass()
 	m_matrixBuffer = 0;
 }
 
-TeddyShaderClass::TeddyShaderClass(const TeddyShaderClass&)
+BoneSphereShaderClass::BoneSphereShaderClass(const BoneSphereShaderClass&)
 {}
 
-TeddyShaderClass::~TeddyShaderClass()
+BoneSphereShaderClass::~BoneSphereShaderClass()
 {}
 
-bool TeddyShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
+bool BoneSphereShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
-	result = InitializeShader(device, hwnd, L"../BaseApp/TeddyVS.fx", L"../BaseApp/TeddyPS.fx");
+	result = InitializeShader(device, hwnd, L"../BaseApp/BoneVS.fx", L"../BaseApp/BonePS.fx");
 	if (!result)
 		return false;
 	return true;
 }
 
-void TeddyShaderClass::Shutdown()
+void BoneSphereShaderClass::Shutdown()
 {
 	ShutdownShader();
 }
 
-bool TeddyShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int instanceCount, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
+bool BoneSphereShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int instanceCount, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
 {
 	bool result;
 
@@ -56,23 +53,23 @@ bool TeddyShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int 
 	return true;
 }
 
-bool TeddyShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool BoneSphereShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
-	HRESULT hr = S_OK;
+
 
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
-	result = D3DCompileFromFile(vsFilename, NULL, NULL, "TeddyVShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(vsFilename, NULL, NULL, "BoneVShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage)
@@ -82,7 +79,7 @@ bool TeddyShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 		return false;
 	}
 
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "TeddyPShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "BonePShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage)
@@ -116,6 +113,14 @@ bool TeddyShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
 
+	polygonLayout[2].SemanticName = "POSITION";
+	polygonLayout[2].SemanticIndex = 1;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[2].InputSlot = 1;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	polygonLayout[2].InstanceDataStepRate = 1;
+
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &m_layout);
@@ -141,7 +146,7 @@ bool TeddyShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 
 }
 
-void TeddyShaderClass::ShutdownShader()
+void BoneSphereShaderClass::ShutdownShader()
 {
 	if (m_matrixBuffer)
 	{
@@ -167,7 +172,7 @@ void TeddyShaderClass::ShutdownShader()
 }
 
 // legacy function? DX10 protocols. here for inclusion's sake
-void TeddyShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void BoneSphereShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -202,7 +207,7 @@ void TeddyShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND h
 	return;
 }
 
-bool TeddyShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
+bool BoneSphereShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -234,11 +239,11 @@ bool TeddyShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRI
 	return true;
 }
 
-void TeddyShaderClass::RenderShader(ID3D11DeviceContext* context, int indexCount, int instanceCount)
+void BoneSphereShaderClass::RenderShader(ID3D11DeviceContext* context, int indexCount, int instanceCount)
 {
 	context->IASetInputLayout(m_layout);
 	context->VSSetShader(m_vertexShader, NULL, 0);
 	context->PSSetShader(m_pixelShader, NULL, 0);
-	//context->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
-	context->Draw(indexCount, 0);
+	context->DrawInstanced(indexCount, instanceCount, 0, 0);
+	//context->Draw(indexCount, 0);
 }

@@ -2,6 +2,7 @@
 // provided by rastertek.com (DX11 Series 2)
 
 #include "GraphicsClass.h"
+#include <iostream>
 
 
 GraphicsClass::GraphicsClass()
@@ -9,16 +10,20 @@ GraphicsClass::GraphicsClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 
-	///		Begin Ground Quad		///
 	m_Model = 0;
 	m_Shader = 0;
-	///		End Ground Quad		///
 
 	m_BoxModel = 0;
 	m_BoxShader = 0;
 
 	m_TeddyModel = 0;
 	m_TeddyShader = 0;
+
+	m_MageModel = 0;
+	m_MageShader = 0;
+
+	m_BoneSphereModel = 0;
+	m_BoneSphereShader = 0;
 
 	//m_SkyBox = 0;
 }
@@ -68,6 +73,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_Model->d3d = m_Direct3D;
+	std::cout << '/a';
 
 	m_Shader = new ShaderClass;
 	if (!m_Shader)
@@ -96,6 +102,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	m_BoxModel->d3d = m_Direct3D;
+	std::cout << '/a';
+
 
 	m_BoxShader = new BoxShaderClass;
 	if (!m_BoxShader)
@@ -111,32 +119,93 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	///		End Box		///
 
 	///		Begin Teddy		///
-	m_TeddyModel = new TeddyModelClass;
-	if (!m_TeddyModel)
-		return false;
-
-	result = m_TeddyModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not Initialize TeddyModel object", L"TeddyModel Error", MB_OK);
-		return false;
-	}
-
-	m_TeddyModel->d3d = m_Direct3D;
-
-	m_TeddyShader = new TeddyShaderClass;
-	if (!m_TeddyShader)
-		return false;
-
-	result = m_TeddyShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize TeddyShader object", L"TeddyShader Error", MB_OK);
-		return false;
-	}
-	m_TeddyShader->d3d = m_Direct3D;
+	//m_TeddyModel = new TeddyModelClass;
+	//if (!m_TeddyModel)
+	//	return false;
+	//
+	//result = m_TeddyModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not Initialize TeddyModel object", L"TeddyModel Error", MB_OK);
+	//	return false;
+	//}
+	//
+	//m_TeddyModel->d3d = m_Direct3D;
+	//std::cout << '/a';
+	//
+	//
+	//m_TeddyShader = new TeddyShaderClass;
+	//if (!m_TeddyShader)
+	//	return false;
+	//
+	//result = m_TeddyShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize TeddyShader object", L"TeddyShader Error", MB_OK);
+	//	return false;
+	//}
+	//m_TeddyShader->d3d = m_Direct3D;
 	///		End Teddy		///
 
+	///		Begin Mage		///
+
+	//m_MageModel = new MageModelClass;
+	//if (!m_MageModel)
+	//	return false;
+	//
+	//result = m_MageModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not Initialize MageModel object", L"MageModel Error", MB_OK);
+	//	return false;
+	//}
+	//
+	//m_MageModel->d3d = m_Direct3D;
+	//std::cout << '/a';
+	//
+	//
+	//m_MageShader = new MageShaderClass;
+	//if (!m_MageShader)
+	//	return false;
+	//
+	//result = m_MageShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize MageShader object", L"MageShader Error", MB_OK);
+	//	return false;
+	//}
+	//m_MageShader->d3d = m_Direct3D;
+
+	///		End Mage		///
+
+	///		Begin BoneSpheres		///
+	m_BoneSphereModel = new BoneSphereModelClass;
+	if (!m_BoneSphereModel)
+		return false;
+
+	result = m_BoneSphereModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not Initialize BoneSphereModel object", L"BoneSphereModel Error", MB_OK);
+		return false;
+	}
+
+	m_BoneSphereModel->d3d = m_Direct3D;
+	std::cout << '/a';
+
+
+	m_BoneSphereShader = new BoneSphereShaderClass;
+	if (!m_BoneSphereShader)
+		return false;
+
+	result = m_BoneSphereShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize BoneSphereShader object", L"BoneSphereShader Error", MB_OK);
+		return false;
+	}
+	m_BoneSphereShader->d3d = m_Direct3D;
+	///		End BoneSpheres		///
 
 
 	m_Light = new Light;
@@ -248,11 +317,25 @@ bool GraphicsClass::Render()
 	///		End Box Model		///
 
 	///		Begin Teddy Model		///
-	m_TeddyModel->Render(m_Direct3D->GetDeviceContext());
-	result = m_TeddyShader->Render(m_Direct3D->GetDeviceContext(), m_TeddyModel->GetIndexCount(), NULL, worldMatrix, viewMatrix, projMatrix);
+	//m_TeddyModel->Render(m_Direct3D->GetDeviceContext());
+	//result = m_TeddyShader->Render(m_Direct3D->GetDeviceContext(), m_TeddyModel->GetIndexCount(), NULL, worldMatrix, viewMatrix, projMatrix);
+	//if (!result)
+	//	return false;
+	///		End Teddy Model		///
+
+	///		Begin Mage Model		///
+	//m_MageModel->Render(m_Direct3D->GetDeviceContext());
+	//result = m_MageShader->Render(m_Direct3D->GetDeviceContext(), m_MageModel->GetIndexCount(), NULL, worldMatrix, viewMatrix, projMatrix);
+	//if (!result)
+	//	return false;
+	///		End Mage Model		///
+
+	///		Begin BoneSphere Model		///
+	m_BoneSphereModel->Render(m_Direct3D->GetDeviceContext());
+	result = m_BoneSphereShader->Render(m_Direct3D->GetDeviceContext(), m_BoneSphereModel->GetIndexCount(), m_BoneSphereModel->GetInstanceCount(), worldMatrix, viewMatrix, projMatrix);
 	if (!result)
 		return false;
-	///		End Box Model		///
+	///		End BoneSphere Model		///
 
 	m_Direct3D->EndScene();
 	return true;
