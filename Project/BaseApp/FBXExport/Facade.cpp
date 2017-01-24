@@ -4,7 +4,8 @@ using namespace Exporter;
 
 namespace EXP
 {
-	vector<Vertex> Facade::getVertices(vector<Vertex> fillOut, const char* filepath)
+
+	vector<VNUInfo> Facade::getVertices(vector<VNUInfo> fillOut, const char* filepath)
 	{
 		FBXExporter* exporter = new FBXExporter();
 		exporter->Initialize();
@@ -17,12 +18,17 @@ namespace EXP
 
 		for (int i = 0; i < exporter->getVertices().size(); i++)
 		{
-			Vertex obj;
+			VNUInfo obj;
 			vector<PNTIWVertex> temp = exporter->getVertices();
 			
-			obj.x = temp[i].mPosition.x;
-			obj.y = temp[i].mPosition.y;
-			obj.z = temp[i].mPosition.z;
+			obj.vertInfo.x = temp[i].mPosition.x;
+			obj.vertInfo.y = temp[i].mPosition.y;
+			obj.vertInfo.z = temp[i].mPosition.z;
+			obj.normInfo.x = temp[i].mNormal.x;
+			obj.normInfo.y = temp[i].mNormal.y;
+			obj.normInfo.z = temp[i].mNormal.z;
+			obj.textureInfo.x = temp[i].mUV.x;
+			obj.textureInfo.y = temp[i].mUV.y;
 			fillOut.push_back(obj);
 		}
 		return fillOut;

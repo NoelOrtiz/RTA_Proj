@@ -16,6 +16,9 @@ GraphicsClass::GraphicsClass()
 	m_BoxModel = 0;
 	m_BoxShader = 0;
 
+	m_TeddyModel = 0;
+	m_TeddyShader = 0;
+
 	//m_SkyBox = 0;
 }
 
@@ -105,6 +108,34 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 	m_BoxShader->d3d = m_Direct3D;
 	///		End Box		///
+
+	///		Begin Teddy		///
+	m_TeddyModel = new TeddyModelClass;
+	if (!m_TeddyModel)
+		return false;
+
+	result = m_TeddyModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext());
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not Initialize TeddyModel object", L"TeddyModel Error", MB_OK);
+		return false;
+	}
+
+	m_TeddyModel->d3d = m_Direct3D;
+
+	m_TeddyShader = new TeddyShaderClass;
+	if (!m_TeddyShader)
+		return false;
+
+	result = m_TeddyShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize TeddyShader object", L"TeddyShader Error", MB_OK);
+		return false;
+	}
+	m_TeddyShader->d3d = m_Direct3D;
+	///		End Teddy		///
+
 
 
 	m_Light = new Light;
@@ -211,6 +242,13 @@ bool GraphicsClass::Render()
 	///		Begin Box Model		///
 	m_BoxModel->Render(m_Direct3D->GetDeviceContext());
 	result = m_BoxShader->Render(m_Direct3D->GetDeviceContext(), m_BoxModel->GetIndexCount(), NULL, worldMatrix, viewMatrix, projMatrix);
+	if (!result)
+		return false;
+	///		End Box Model		///
+
+	///		Begin Teddy Model		///
+	m_TeddyModel->Render(m_Direct3D->GetDeviceContext());
+	result = m_TeddyShader->Render(m_Direct3D->GetDeviceContext(), m_TeddyModel->GetIndexCount(), NULL, worldMatrix, viewMatrix, projMatrix);
 	if (!result)
 		return false;
 	///		End Box Model		///

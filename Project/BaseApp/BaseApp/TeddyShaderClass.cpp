@@ -1,22 +1,21 @@
 // Base Application Setup Instructions
 // provided by rastertek.com (DX11 Series 2)
 
-#include "ShaderClass.h"
+#include "TeddyShaderClass.h"
 #include "Facade.h"
-
 
 
 const DWORD modelNum = 5;
 
-char files[modelNum][256] =
+char files2[modelNum][256] =
 {
-	"Box_Attack.fbx",
-	"Box_Idle.fbx",
-	"Box_Jump.fbx",
-	"Box_Walk.fbx",
+	"Teddy_Attack.fbx",
+	"Teddy_Idle.fbx",
+	"Teddy_Jump.fbx",
+	"Teddy_Walk.fbx",
 	"Death.fbx",
 };
-ShaderClass::ShaderClass()
+TeddyShaderClass::TeddyShaderClass()
 {
 	m_vertexShader = 0;
 	m_pixelShader = 0;
@@ -24,28 +23,28 @@ ShaderClass::ShaderClass()
 	m_matrixBuffer = 0;
 }
 
-ShaderClass::ShaderClass(const ShaderClass&)
+TeddyShaderClass::TeddyShaderClass(const TeddyShaderClass&)
 {}
 
-ShaderClass::~ShaderClass()
+TeddyShaderClass::~TeddyShaderClass()
 {}
 
-bool ShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
+bool TeddyShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
-	result = InitializeShader(device, hwnd, L"../BaseApp/PassThruVS.fx", L"../BaseApp/PassThruPS.fx");
+	result = InitializeShader(device, hwnd, L"../BaseApp/TeddyVS.fx", L"../BaseApp/TeddyPS.fx");
 	if (!result)
 		return false;
 	return true;
 }
 
-void ShaderClass::Shutdown()
+void TeddyShaderClass::Shutdown()
 {
 	ShutdownShader();
 }
 
-bool ShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int instanceCount, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
+bool TeddyShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int instanceCount, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
 {
 	bool result;
 
@@ -58,32 +57,23 @@ bool ShaderClass::Render(ID3D11DeviceContext* context, int indexCount, int insta
 	return true;
 }
 
-bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool TeddyShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[4];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	HRESULT hr = S_OK;
-	//for (DWORD i = 0; i < modelNum; i++)
-	//{
-	//	loader[i] = new FBXLoader();
-	//	hr = loader[i]->LoadFBX(files[i]);
-	//}
-	vector<VNUInfo> storedInfo;
-	EXP::Facade myF;
-	storedInfo = myF.getVertices(storedInfo, "Box_Attack.fbx");
-	int track = storedInfo.size();
 
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
-	result = D3DCompileFromFile(vsFilename, NULL, NULL, "VShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(vsFilename, NULL, NULL, "TeddyVShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage)
@@ -93,7 +83,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 		return false;
 	}
 
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "PShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "TeddyPShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		if (errorMessage)
@@ -119,29 +109,13 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
 
-	polygonLayout[1].SemanticName = "COLOR";
+	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
 	polygonLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	polygonLayout[1].InputSlot = 0;
 	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[1].InstanceDataStepRate = 0;
-
-	polygonLayout[2].SemanticName = "NORMAL";
-	polygonLayout[2].SemanticIndex = 0;
-	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[2].InputSlot = 0;
-	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	polygonLayout[2].InstanceDataStepRate = 0;
-
-	polygonLayout[3].SemanticName = "TEXCOORD";
-	polygonLayout[3].SemanticIndex = 1;
-	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	polygonLayout[3].InputSlot = 1;
-	polygonLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-	polygonLayout[3].InstanceDataStepRate = 1;
 
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
@@ -168,7 +142,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 
 }
 
-void ShaderClass::ShutdownShader()
+void TeddyShaderClass::ShutdownShader()
 {
 	if (m_matrixBuffer)
 	{
@@ -194,7 +168,7 @@ void ShaderClass::ShutdownShader()
 }
 
 // legacy function? DX10 protocols. here for inclusion's sake
-void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void TeddyShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long long bufferSize, i;
@@ -229,12 +203,13 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 	return;
 }
 
-bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
+bool TeddyShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX world, XMMATRIX view, XMMATRIX proj)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* dataPtr;
 	unsigned int bufferNumber;
+
 
 
 	world = XMMatrixTranspose(world);
@@ -244,7 +219,7 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX wor
 	result = context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 		return false;
-	
+
 	dataPtr = (MatrixBufferType*)mappedResource.pData;
 
 	dataPtr->projection = proj;
@@ -260,11 +235,11 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* context, XMMATRIX wor
 	return true;
 }
 
-void ShaderClass::RenderShader(ID3D11DeviceContext* context, int indexCount, int instanceCount)
+void TeddyShaderClass::RenderShader(ID3D11DeviceContext* context, int indexCount, int instanceCount)
 {
 	context->IASetInputLayout(m_layout);
 	context->VSSetShader(m_vertexShader, NULL, 0);
 	context->PSSetShader(m_pixelShader, NULL, 0);
-	context->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
-
+	//context->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
+	context->Draw(indexCount, 0);
 }

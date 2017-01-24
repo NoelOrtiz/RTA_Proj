@@ -1,23 +1,23 @@
 // Base Application Setup Instructions
 // provided by rastertek.com (DX11 Series 2)
 
-#include "BoxModelClass.h"
+#include "TeddyModelClass.h"
 #include "DDSTextureLoader.h"
 #include "Facade.h"
 
-BoxModelClass::BoxModelClass()
+TeddyModelClass::TeddyModelClass()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 }
 
-BoxModelClass::BoxModelClass(const BoxModelClass& other)
+TeddyModelClass::TeddyModelClass(const TeddyModelClass& other)
 {}
 
-BoxModelClass::~BoxModelClass()
+TeddyModelClass::~TeddyModelClass()
 {}
 
-bool BoxModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
+bool TeddyModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	bool result;
 	result = InitializeBuffers(device, context);
@@ -26,22 +26,22 @@ bool BoxModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex
 	return true;
 }
 
-void BoxModelClass::Shutdown()
+void TeddyModelClass::Shutdown()
 {
 	ShutdownBuffers();
 }
 
-void BoxModelClass::Render(ID3D11DeviceContext* context)
+void TeddyModelClass::Render(ID3D11DeviceContext* context)
 {
 	RenderBuffers(context);
 }
 
-int BoxModelClass::GetIndexCount()
+int TeddyModelClass::GetIndexCount()
 {
 	return m_indexCount;
 }
 
-bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context)
+bool TeddyModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	VertexType* vertices;
 	unsigned int* indices;
@@ -51,16 +51,14 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 	ID3D11SamplerState* m_samplerState;
 	D3D11_SAMPLER_DESC ssDesc;
 
-	
-
 	HRESULT result;
 
 	// import FBX data
 	std::vector<VNUInfo> fbxVerts;
 
 	EXP::Facade myF;
-	fbxVerts = myF.getVertices(fbxVerts, "Box_Attack.fbx");
-	//getIndices
+	fbxVerts = myF.getVertices(fbxVerts, "Teddy_Attack1.fbx");
+	//getIndices?
 
 	m_vertexCount = fbxVerts.size();
 	m_indexCount = m_vertexCount;
@@ -73,9 +71,6 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 		return false;
 
 	// fill vert array
-	//XMFLOAT3* arr = new XMFLOAT3[m_vertexCount];
-	//std::copy(fbxVerts.begin(), fbxVerts.end(), arr);
-
 	VNUInfo* arr = &fbxVerts[0];
 	for (int i = 0; i < m_vertexCount; i++)
 	{
@@ -140,7 +135,7 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 	return true;
 }
 
-void BoxModelClass::ShutdownBuffers()
+void TeddyModelClass::ShutdownBuffers()
 {
 	if (m_indexBuffer)
 	{
@@ -155,7 +150,7 @@ void BoxModelClass::ShutdownBuffers()
 }
 
 
-void BoxModelClass::RenderBuffers(ID3D11DeviceContext* context)
+void TeddyModelClass::RenderBuffers(ID3D11DeviceContext* context)
 {
 	unsigned stride[2];
 	unsigned offset[2];
