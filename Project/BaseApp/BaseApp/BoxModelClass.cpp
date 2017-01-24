@@ -54,7 +54,7 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 	HRESULT result;
 
 	// import FBX data
-	std::vector<Vertex> fbxVerts;
+	std::vector<VNUInfo> fbxVerts;
 
 	EXP::Facade myF;
 	fbxVerts = myF.getVertices(fbxVerts, "Box_Attack.fbx");
@@ -74,10 +74,10 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 	//XMFLOAT3* arr = new XMFLOAT3[m_vertexCount];
 	//std::copy(fbxVerts.begin(), fbxVerts.end(), arr);
 
-	Vertex* arr = &fbxVerts[0];
+	VNUInfo* arr = &fbxVerts[0];
 	for (int i = 0; i < m_vertexCount; i++)
 	{
-		vertices[i].position = XMFLOAT4(arr[i].x, arr[i].y, arr[i].z, 0.0f);
+		vertices[i].position = XMFLOAT4(arr[i].vertInfo.x, arr[i].vertInfo.y, arr[i].vertInfo.z, 0.0f);
 		vertices[i].color = XMFLOAT4(0, 0, 0, 0);
 	}
 

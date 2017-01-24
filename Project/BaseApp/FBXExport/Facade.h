@@ -6,6 +6,13 @@
 #else
 #define DLLEXPORT1 __declspec(dllimport)
 #endif
+struct VNUInfo
+{
+	XMFLOAT3 vertInfo;
+	XMFLOAT3 normInfo;
+	XMFLOAT2 textureInfo;
+
+};
 struct Vertex
 {
 	float x;
@@ -13,14 +20,18 @@ struct Vertex
 	float z;
 };
 
+
 struct Normal
 {
-
+	float x;
+	float y;
+	float z;
 };
 
 struct UV
 {
-
+	float x;
+	float y;
 };
 
 namespace  EXP
@@ -28,10 +39,8 @@ namespace  EXP
 	class DLLEXPORT1 Facade
 	{
 	public:
-		std::vector<Vertex> numVertices;
-		std::vector<Normal> norms;
-		std::vector<UV> uvs;
 		bool success = false;
-		std::vector<Vertex> getVertices(std::vector<Vertex> fillOut, const char* filepath);
+		std::vector<VNUInfo> getVertices(std::vector<VNUInfo> fillOut, const char* filepath);
+		
 	};
 }
