@@ -51,6 +51,8 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 	ID3D11SamplerState* m_samplerState;
 	D3D11_SAMPLER_DESC ssDesc;
 
+	
+
 	HRESULT result;
 
 	// import FBX data

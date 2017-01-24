@@ -7,8 +7,7 @@
 
 #include <vector>
 #include "D3DClass.h"
-
-
+#include <list>
 class BoxModelClass
 {
 private:
@@ -39,6 +38,7 @@ public:
 	bool transparent;
 
 	D3DClass* d3d;
+
 };
 
 

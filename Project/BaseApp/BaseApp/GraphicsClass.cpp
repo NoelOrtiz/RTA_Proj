@@ -4,7 +4,6 @@
 #include "GraphicsClass.h"
 #include <iostream>
 
-
 GraphicsClass::GraphicsClass()
 {
 	m_Direct3D = 0;
