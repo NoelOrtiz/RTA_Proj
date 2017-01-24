@@ -3,7 +3,6 @@
 
 #include "GraphicsClass.h"
 
-
 GraphicsClass::GraphicsClass()
 {
 	m_Direct3D = 0;
