@@ -41,6 +41,6 @@ namespace  EXP
 	public:
 		bool success = false;
 		std::vector<VNUInfo> getVertices(std::vector<VNUInfo> fillOut, const char* filepath);
-		
+		void getJoints( const char* filepath);
 	};
 }

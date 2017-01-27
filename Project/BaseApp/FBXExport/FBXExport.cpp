@@ -3,10 +3,6 @@
 #include <sstream>
 #include <iomanip>
 
-
-
-
-
 namespace Exporter
 {
 
@@ -23,7 +19,6 @@ namespace Exporter
 	bool FBXExporter::Initialize()
 	{
 
-		//mFBXManager->Create();
 		mFBXManager = FbxManager::Create();
 		if (!mFBXManager)
 		{
@@ -43,9 +38,10 @@ namespace Exporter
 		FbxMesh* currMesh = inNode->GetMesh();
 		if (currMesh == nullptr)
 		{
-			int tracker = 0;
-			tracker = inNode->GetChildCount(false);
+		 	int tracker = 0;
+		 	tracker = inNode->GetChildCount(false);
 			currMesh = inNode->GetChild(0)->GetMesh();
+
 		}
 		unsigned int ctrlPointCount = 0;
 		ctrlPointCount = currMesh->GetControlPointsCount();
@@ -118,6 +114,8 @@ namespace Exporter
 
 		return true;
 	}
+
+
 
 	//void FBXExporter::ExportFBX()
 	//{

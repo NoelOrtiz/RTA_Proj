@@ -60,6 +60,7 @@ bool BoxModelClass::InitializeBuffers(ID3D11Device* device, ID3D11DeviceContext*
 
 	EXP::Facade myF;
 	fbxVerts = myF.getVertices(fbxVerts, "Box_Attack.fbx");
+	myF.getJoints("Box_Attack.fbx");
 	//getIndices
 
 	m_vertexCount = fbxVerts.size();

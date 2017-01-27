@@ -4,9 +4,25 @@ using namespace Exporter;
 
 namespace EXP
 {
-
+	void Facade::getJoints( const char* filepath)
+	{
+		FBXExporter* exporter = new FBXExporter();
+		exporter->Initialize();
+		exporter->LoadScene(filepath);
+		FbxScene* temp = exporter->getScene();
+		FbxNode* tempNode = temp->GetRootNode();
+		exporter->ProcessSkeletonHierarchy(tempNode);
+		Skeleton tempSkel = exporter->getSkelton();
+		for (int i = 0; i < tempSkel.mJoints.size(); i++)
+		{
+			FbxNode* temp2 = tempSkel.mJoints[i].mNode;
+			
+		}
+		
+	}
 	vector<VNUInfo> Facade::getVertices(vector<VNUInfo> fillOut, const char* filepath)
 	{
+		
 		FBXExporter* exporter = new FBXExporter();
 		exporter->Initialize();
 		exporter->LoadScene(filepath);
